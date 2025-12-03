@@ -205,6 +205,15 @@ body {
     font-size: 16px;
 }
 
+#welcome {
+    position: relative; /* чтобы z-index работал */
+    z-index: 1000;      /* достаточно большое значение, чтобы перекрыть другие элементы */
+}
+#geo-btn {
+    position: relative; /* на всякий случай */
+    z-index: 1001;      /* чтобы кнопка точно была выше фона/слоёв */
+}
+
 
 .tooltiptext {
     visibility: hidden;
