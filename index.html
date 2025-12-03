@@ -180,8 +180,18 @@ body {
 }
 
 .feed {
-    height: 100px;      /* или любое другое значение */
+    height: 400px; /* твоя высота */
     overflow-y: auto;
+    position: relative;
+
+    /* Маска градиентом сверху и снизу */
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0));
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0));
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
 }
 
 
@@ -351,6 +361,8 @@ body {
         Выберите тип карты для выпуска:
     </div>
     <div id="card-feed" class="feed">
+
+        <!-- Товар 1 -->
     <div class="option" data-name="Crypto Bot Online Card" data-price="52.5">
         <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Laptop.webp?raw=true" alt="">
         <div>
@@ -359,6 +371,7 @@ body {
         </div>
     </div>
 
+          <!-- Товар 2 -->
     <div class="option" data-name="Crypto Bot NFC Card" data-price="52.5">
         <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true" alt="">
         <div>
@@ -367,6 +380,28 @@ body {
         </div>
     </div>
 
+
+
+    <!-- Товар 3 -->
+    <div class="option" data-name="Crypto Bot NFC Card" data-price="52.5">
+        <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true" alt="">
+        <div>
+            <div style="color:#6ab2f2">Crypto Bot NFC Card323  - 52.5 USDT</div>
+            <div class="desc">Подойдёт для привязки к GooglePay/ApplePay и оплаты через NFC-терминалы.</div>
+        </div>
+    </div>
+        
+<!-- Товар 4 -->
+    <div class="option" data-name="Crypto Bot NFC Card" data-price="52.5">
+        <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true" alt="">
+        <div>
+            <div style="color:#6ab2f2">Crypto Bвавававаot NFC Card323  - 52.5 USDT</div>
+            <div class="desc">Подойдёт для привязки к GooglePay/ApplePay и оплаты через NFC-терминалы.</div>
+        </div>
+    </div>
+        
+
+          <!-- Товар 5 -->
     <div class="option" data-name="Crypto Bot Ultima" data-price="99">
         <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/New%20Button.webp?raw=true" alt="">
         <div>
