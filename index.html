@@ -783,66 +783,32 @@ document.addEventListener('click', () => {
     }
 
 
-// --- твои товары ---
-const PRODUCTS = [
-    {
-        name: "Max Swap Online Card",
-        desc: "Мгновенный выпуск виртуальной карты",
-        img: "img/cards/online.png"
-    },
-    {
-        name: "Max Swap NFC Card",
-        desc: "Физическая карта с NFC",
-        img: "img/cards/nfc.png"
-    },
-    {
-        name: "Max Swap Ultima",
-        desc: "Премиальная карта с кэшбеком",
-        img: "img/cards/ultima.png"
-    }
-    // ... добавь все 20 товаров
-];
+// FEED
 
-// перемешивание массива
-function shuffle(arr) {
-    return arr
-        .map(x => ({ sort: Math.random(), value: x }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(x => x.value);
-}
+    const feed = document.getElementById("card-feed");
 
-const feed = document.getElementById("card-feed");
+// Сохраняем исходные 3 элемента
+const originalOptions = Array.from(feed.querySelectorAll(".option"));
 
-// генерация партии карточек
-function loadBatch() {
-    const shuffled = shuffle(PRODUCTS);
-
-    shuffled.forEach(product => {
-        const card = document.createElement("div");
-        card.className = "option";
-
-        card.innerHTML = `
-            <img src="${product.img}">
-            <div>
-                <b style="color:white">${product.name}</b>
-                <div class="desc">${product.desc}</div>
-            </div>
-        `;
-
-        // если нужно — обработчик клика
-        // card.addEventListener("click", () => selectProduct(product));
-
-        feed.appendChild(card);
-    });
-}
-
-// первая загрузка
-loadBatch();
-
-// бесконечный скролл
+// Клонирование блока при прокрутке
 feed.addEventListener("scroll", () => {
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 20) {
-        loadBatch();
+    // Когда дошли почти до конца — добавляем новые 3
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
+
+        originalOptions.forEach(opt => {
+            const clone = opt.cloneNode(true);
+            feed.appendChild(clone);
+        });
+    }
+
+    // Чтобы блок не разрастался бесконечно — перезапускаем цикл
+    if (feed.children.length > 30) { 
+        feed.innerHTML = "";
+        originalOptions.forEach(opt => {
+            const clone = opt.cloneNode(true);
+            feed.appendChild(clone);
+        });
+        feed.scrollTop = 0;
     }
 });
 
