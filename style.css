@@ -1,0 +1,243 @@
+:root {
+    /* Переменные для адаптации к теме Telegram */
+    --tg-bg-color: var(--tg-theme-bg-color, #1a1a1a);
+    --tg-text-color: var(--tg-theme-text-color, #ffffff);
+    --tg-hint-color: var(--tg-theme-hint-color, #aaaaaa);
+    --tg-link-color: var(--tg-theme-link-color, #64b5f6);
+    --tg-button-color: var(--tg-theme-button-color, #5691de);
+    --tg-button-text-color: var(--tg-theme-button-text-color, #ffffff);
+    --card-bg-color: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    background-color: var(--tg-bg-color);
+    color: var(--tg-text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Общие стили для кнопок */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.checkout-button, .quick-search-button, #apply-promo-btn {
+    background-color: var(--tg-button-color);
+    color: var(--tg-button-text-color);
+}
+
+.checkout-button:hover, .quick-search-button:hover, #apply-promo-btn:hover {
+    filter: brightness(1.1);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Бегущая строка */
+.ticker {
+    background-color: var(--card-bg-color);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker p {
+    margin: 0;
+    animation: ticker-move 15s linear infinite;
+    display: inline-block;
+}
+
+@keyframes ticker-move {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Блоки управления (Город/Метро) */
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.control-box {
+    flex: 1;
+    margin: 0 5px;
+    text-align: center;
+}
+
+.control-box img {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#city-select, #metro-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--tg-hint-color);
+    background-color: var(--card-bg-color);
+    color: var(--tg-text-color);
+    box-sizing: border-box;
+    appearance: none; /* Убираем стандартную стрелку */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23${var(--tg-hint-color)}" width="18px" height="18px"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    cursor: pointer;
+}
+
+#metro-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Кнопка быстрого поиска */
+.quick-search-button {
+    background: var(--card-bg-color);
+    color: var(--tg-link-color);
+    border: 1px solid var(--tg-link-color);
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+}
+
+.quick-search-button .icon {
+    /* Просто стилизованный значок, похожий на "поиск" */
+    width: 20px;
+    height: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23${var(--tg-link-color)}" width="20px" height="20px"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 5L20.49 19l-5-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
+    background-size: cover;
+}
+
+/* Слайдер товаров */
+.product-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: var(--tg-hint-color);
+}
+
+.slider-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 0;
+    -webkit-overflow-scrolling: touch; /* Для плавного скролла на iOS */
+}
+
+.product-slider {
+    display: flex;
+    /* Убедитесь, что слайдер достаточно широкий для скролла */
+}
+
+.product-card {
+    display: inline-block;
+    width: 150px;
+    height: 180px;
+    background-color: var(--card-bg-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-right: 15px;
+    text-align: center;
+    flex-shrink: 0; /* Чтобы карточки не сжимались */
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border 0.2s;
+    position: relative;
+}
+
+.product-card:hover, .product-card.selected {
+    border: 1px solid var(--tg-link-color);
+}
+
+.product-card img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.product-card p {
+    margin: 5px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-card.placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100vw - 40px); /* Примерная ширина, чтобы заполнить экран */
+    height: 200px;
+    flex-direction: column;
+    margin: 0 10px;
+}
+
+.placeholder-text {
+    font-size: 16px;
+    color: var(--tg-hint-color);
+}
+
+/* Страница оплаты */
+.payment-page {
+    padding: 20px;
+}
+
+.payment-page h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--tg-text-color);
+}
+
+.payment-page p, .currency-block, .promo-block {
+    margin-bottom: 15px;
+}
+
+.currency-block select, .promo-block input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--tg-hint-color);
+    background-color: var(--card-bg-color);
+    color: var(--tg-text-color);
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+#payment-details {
+    background-color: var(--card-bg-color);
+    padding: 15px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    margin-top: 20px;
+}
+
+.final-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--tg-link-color);
+    text-align: center;
+}
+
+.back-button {
+    background-color: #555;
+    color: #fff;
+}
