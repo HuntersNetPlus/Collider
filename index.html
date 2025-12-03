@@ -783,58 +783,65 @@ document.addEventListener('click', () => {
     }
 
 
-// ---- 20 заранее созданных карточек ----
-const CARDS = [
-    "Max Swap Online Card",
-    "Max Swap NFC Card",
-    "Max Swap Ultima",
-    "Premium Account Upgrade",
-    "VIP Gold Card",
-    "Daily Investment Pass",
-    "Boost 1",
-    "Boost 2",
-    "Boost 3",
-    "Crypto Vault Access",
-    "Referral Bundle",
-    "USDT Wallet Upgrade",
-    "SOL Power Pack",
-    "FastTrack Activation",
-    "Premium Gift Pack",
-    "Early Access Beta",
-    "Diamond Status",
-    "Platinum Access",
-    "Multichain Upgrade",
-    "Bonus Bundle"
+// --- твои товары ---
+const PRODUCTS = [
+    {
+        name: "Max Swap Online Card",
+        desc: "Мгновенный выпуск виртуальной карты",
+        img: "img/cards/online.png"
+    },
+    {
+        name: "Max Swap NFC Card",
+        desc: "Физическая карта с NFC",
+        img: "img/cards/nfc.png"
+    },
+    {
+        name: "Max Swap Ultima",
+        desc: "Премиальная карта с кэшбеком",
+        img: "img/cards/ultima.png"
+    }
+    // ... добавь все 20 товаров
 ];
 
 // перемешивание массива
 function shuffle(arr) {
     return arr
-        .map(a => ({ sort: Math.random(), value: a }))
+        .map(x => ({ sort: Math.random(), value: x }))
         .sort((a, b) => a.sort - b.sort)
-        .map(a => a.value);
+        .map(x => x.value);
 }
 
 const feed = document.getElementById("card-feed");
 
-// загружает одну партию (20 элементов в перемешанном виде)
+// генерация партии карточек
 function loadBatch() {
-    const shuffled = shuffle(CARDS);
+    const shuffled = shuffle(PRODUCTS);
 
-    shuffled.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "feed-item";
-        div.innerText = item;
-        feed.appendChild(div);
+    shuffled.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "option";
+
+        card.innerHTML = `
+            <img src="${product.img}">
+            <div>
+                <b style="color:white">${product.name}</b>
+                <div class="desc">${product.desc}</div>
+            </div>
+        `;
+
+        // если нужно — обработчик клика
+        // card.addEventListener("click", () => selectProduct(product));
+
+        feed.appendChild(card);
     });
 }
 
-// первый запуск
+// первая загрузка
 loadBatch();
 
-// бесконечная подгрузка
+// бесконечный скролл
 feed.addEventListener("scroll", () => {
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 10) {
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 20) {
         loadBatch();
     }
 });
