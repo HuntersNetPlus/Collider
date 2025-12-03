@@ -872,7 +872,6 @@ document.addEventListener('click', () => {
         }
     }
 
-
 // FEED
 const feed = document.getElementById("card-feed");
 const originalOptions = Array.from(feed.querySelectorAll(".option"));
@@ -887,20 +886,34 @@ function attachClickHandler(optionElem) {
     });
 }
 
-// Перемешиваем исходные элементы для первой загрузки
-const shuffledInitial = shuffle([...originalOptions]);
+// Функция перемешивания массива (Fisher-Yates)
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
-// Очищаем feed и добавляем перемешанные элементы
-feed.innerHTML = "";
-shuffledInitial.forEach(opt => {
-    const clone = opt.cloneNode(true);
-    attachClickHandler(clone);
-    feed.appendChild(clone);
-});
+// Инициализация feed при первой загрузке
+function initFeed() {
+    feed.innerHTML = "";
+    // Добавляем несколько циклов перемешанных элементов, чтобы scrollHeight > clientHeight
+    for (let cycle = 0; cycle < 5; cycle++) {
+        const shuffled = shuffle([...originalOptions]);
+        shuffled.forEach(opt => {
+            const clone = opt.cloneNode(true);
+            attachClickHandler(clone);
+            feed.appendChild(clone);
+        });
+    }
+}
+initFeed();
 
-// Теперь навешиваем обработчик прокрутки
+// Обработчик прокрутки
 feed.addEventListener("scroll", () => {
     if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
+        // Добавляем ещё один перемешанный набор
         const shuffled = shuffle([...originalOptions]);
         shuffled.forEach(opt => {
             const clone = opt.cloneNode(true);
@@ -909,29 +922,14 @@ feed.addEventListener("scroll", () => {
         });
     }
 
-    if (feed.children.length > 30) {
+    // Ограничиваем общее количество элементов
+    if (feed.children.length > 50) {
         feed.innerHTML = "";
-        const shuffled = shuffle([...originalOptions]);
-        shuffled.forEach(opt => {
-            const clone = opt.cloneNode(true);
-            attachClickHandler(clone);
-            feed.appendChild(clone);
-        });
+        initFeed();
         feed.scrollTop = 0;
     }
 });
 
-
-
-
-
-
-    
-
-    // Слайдшоу
-    const slides = document.querySelectorAll(".slide");
-    let index = 0;
-    const total = slides.length;
 
     function nextSlide() {
         if (total === 0) return;
