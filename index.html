@@ -819,7 +819,6 @@ document.addEventListener('click', () => {
 
 
 // FEED
-
 const feed = document.getElementById("card-feed");
 const originalOptions = Array.from(feed.querySelectorAll(".option"));
 
@@ -836,10 +835,7 @@ function attachClickHandler(optionElem) {
 // Навешиваем обработчики на оригиналы
 originalOptions.forEach(opt => attachClickHandler(opt));
 
-
-
-
-
+// Функция перемешивания
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -848,32 +844,22 @@ function shuffle(array) {
     return array;
 }
 
-
-
-    feed.addEventListener("scroll", () => {
+// Обработчик прокрутки
+feed.addEventListener("scroll", () => {
     if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
-        const shuffled = shuffle([...originalOptions]); // копия + перемешивание
+        const shuffled = shuffle([...originalOptions]);
         shuffled.forEach(opt => {
             const clone = opt.cloneNode(true);
+            attachClickHandler(clone); // навешиваем клик
             feed.appendChild(clone);
         });
     }
 
+    // Чтобы блок не разрастался бесконечно
     if (feed.children.length > 30) {
         feed.innerHTML = "";
         const shuffled = shuffle([...originalOptions]);
         shuffled.forEach(opt => {
-            const clone = opt.cloneNode(true);
-            feed.appendChild(clone);
-        });
-        feed.scrollTop = 0;
-    }
-});
-
-    // Чтобы блок не стал бесконечно огромным — перезапуск
-    if (feed.children.length > 30) {
-        feed.innerHTML = "";
-        originalOptions.forEach(opt => {
             const clone = opt.cloneNode(true);
             attachClickHandler(clone);
             feed.appendChild(clone);
