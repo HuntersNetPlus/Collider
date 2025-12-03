@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Магазин с выбором локации</title>
+<title>Crypto Bot Карта</title>
 <style>  
 body {
     margin: 0;
@@ -12,11 +12,243 @@ body {
 }
 .screen {
     display: none;
-    min-height: 100vh; /* Изменено на min-height */
+    height: 100vh;
     padding: 20px;
     box-sizing: border-box;
 }
+
+    #price_usdt {
+          color: #17212b;
+          display: none;
+    }
+
+
+
+    .sbp-link {
+    color: #17212b;       /* цвет текста */
+    font-size: 12px;      /* размер */
+    text-decoration: none; /* убрать подчёркивание */
+    background: #6ab2f2;
+    max-width: 70vw;
+    padding: 10px;
+    border-radius: 4px;
+    word-wrap: break-word;
+    text-align: center;
+    
+           
+}
+    
 .active { display: block; }
+
+#pay_title {
+  display: none;
+}
+
+#promo_input::placeholder {
+    color: #6ab2f2;
+    text-transform: uppercase;
+    opacity: 1;
+}
+
+#slideshow-container {
+    position: relative;
+    width: 80vw;
+    max-width: 400px;
+    height: 60vw;
+    max-height: 300px;
+    margin: 20px auto;
+}
+
+.gold-glow {
+    color: #ffdd77 !important;
+    text-shadow:
+        0 0 6px #ffdd77,
+        0 0 12px #ffbb22,
+        0 0 20px #ffaa00;
+    transition: 0.3s ease;
+}
+
+.tooltip-glass {
+    position: fixed;
+    left: 50%;
+    width: 65vw;
+    top: 40%;
+    transform: translateX(-50%);
+    padding: 10px 10px;
+    border-radius: 4px;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-size: 14px;
+    animation: fadeIn 0.25s ease;
+    z-index: 99999;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    opacity: 0.9;
+    border-radius: 2px;
+}
+
+.glass-status-btn {
+    padding: 2px;
+    width: 63vw;
+    max-width: 63vw;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-status-btn::after {
+    content: "";
+    position: absolute;
+    top: -150%;
+    left: -150%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(
+        45deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.6) 25%,
+        rgba(255,255,255,0) 55%
+    );
+    transform: rotate(15deg);
+    animation: shine-move 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes shine-move {
+    from { transform: translateX(-100%) rotate(15deg); }
+    to   { transform: translateX(100%) rotate(15deg); }
+}
+
+.slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    transform-origin: center center;
+}
+
+.slide.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.slide.out {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1);
+}
+
+.button {
+    width: 75vw;
+    margin: 20px auto 0;
+    padding: 15px;
+    font-size: 18px;
+    text-align: center;
+    background: #2f6ea5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    display: block;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: #fff;
+}
+
+    .feed {
+    height: 80vh;          /* область просмотра */
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.feed-item {
+    background: #1d2b3a;
+    color: white;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #6ab2f2;
+    font-size: 16px;
+}
+
+
+.tooltiptext {
+    visibility: hidden;
+    width: 250px;
+    padding: 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.7s, transform 0.7s;
+}
+
+.tooltip.show .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.qr-glow-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.option {
+    background: #253648;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 15px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.option img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+}
+
+.desc {
+    font-size: 13px;
+    margin-top: 4px;
+    color: white;
+}
 
 #loader {
     position: fixed;
@@ -28,220 +260,131 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 22px;
-    z-index: 10000;
-}
-/* ---------------------------------- */
-/* НОВЫЕ СТИЛИ ДЛЯ ЛОКАЦИИ И ВИТРИНЫ */
-/* ---------------------------------- */
-.ribbon {
-    background: #253648;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-.location-selector {
-    text-align: center;
-    margin-top: 50px;
-}
-.dropdown-pair {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-.loc-dropdown {
-    width: 40vw;
-    padding: 10px;
-    background: #253648;
-    color: #fff;
-    border: 1px solid #6ab2f2;
-    border-radius: 4px;
-    text-align: center;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    cursor: pointer;
-    font-size: 14px;
-}
-.loc-dropdown:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
-.quick-search-btn {
-    display: block;
-    width: 70vw;
-    margin: 0 auto 30px;
-    padding: 10px;
-    color: #fff;
-    background: #253648;
-    border: 1px solid #6ab2f2;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
+#payment {
+    font-size: 15px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: white;
 }
 
-#position_label {
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 20px auto 10px;
+#payment.active {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-#product_feed_container {
-    position: relative;
-    min-height: 500px; /* Минимальная высота, чтобы лоадер имел размер */
-}
-.product-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding-top: 10px;
-}
-.product-card {
-    background: #253648;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 8px 5px;
-    width: 100px;
-    text-align: center;
-    cursor: pointer;
-}
-.product-card img {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 5px;
-}
-.product-title {
-    color: white;
-    font-size: 14px;
-    margin-bottom: 4px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-.product-price {
-    color: #ffdd77;
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-.buy-button {
-    background: #2f6ea5;
-    color: white;
-    border: none;
+.address-box {
+    max-width: 65vw;
+    padding: 8px;
+    border: 2px dashed #6ab2f2;
     border-radius: 4px;
-    padding: 5px;
-    width: 100%;
+    word-wrap: break-word;
+    text-align: center;
     font-size: 12px;
     cursor: pointer;
 }
-/* Витрина скрыта, пока не выбрано метро */
-#storefront_content {
-    display: none;
-}
-
-/* Лоадер-оверлей при смене локации */
-#storefront_overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(23, 33, 43, 0.95);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 18px;
-    z-index: 10;
-    border-radius: 8px;
-    display: none;
-}
-/* Блок с ошибкой */
-.error-block {
-    background: #3a1919;
-    border: 1px solid #ff4757;
-    color: #ff4757;
-    padding: 20px;
-    margin-top: 30px;
-    border-radius: 8px;
+    .sbp-active {
+    max-width: 65vw;
+    padding: 8px;
+    border: 2px #6ab2f2;
+    border-radius: 4px;
+    word-wrap: break-word;
     text-align: center;
-    font-size: 16px;
+    font-size: 12px;
+    cursor: pointer;
 }
 
-/* Стили для платежного экрана (оставлены из оригинала) */
-.sbp-link { color: #17212b; font-size: 12px; text-decoration: none; background: #6ab2f2; max-width: 70vw; padding: 10px; border-radius: 4px; word-wrap: break-word; text-align: center; }
-.tooltip-glass { position: fixed; left: 50%; width: 65vw; top: 40%; transform: translateX(-50%); padding: 10px; border-radius: 4px; backdrop-filter: blur(12px); background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 14px; animation: fadeIn 0.25s ease; z-index: 99999; text-align: center; }
-@keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-.address-box { max-width: 65vw; padding: 8px; border: 2px dashed #6ab2f2; border-radius: 4px; word-wrap: break-word; text-align: center; font-size: 12px; cursor: pointer; }
-.sbp-active { border: 2px solid #6ab2f2; }
-.copied { background: #6ab2f2; border-color: #00aa00; transition: 1s; }
-#currency { width: 65vw; padding: 12px; font-size: 14px; border-radius: 6px; margin-bottom:10px; border: 1px solid #6ab2f2; background: #17212b; color: #6ab2f2; outline: none; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="%236ab2f2" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; }
+.copied {
+    background: #6ab2f2;
+    border-color: #00aa00;
+    transition: 1s;
+}
 
+#currency {
+    width: 65vw;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    margin-bottom:10px;
+    border: 1px solid #6ab2f2;
+    background: #17212b;
+    color: #6ab2f2;
+    outline: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%236ab2f2" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
 </style>
 </head>
 <body>
 
 <div id="loader"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Hourglass%20Not%20Done.webp?raw=true" style="width:200px;"></div>
 
-<div id="location_select" class="screen active">
-    <div class="ribbon">Бегущая строка с текстом об акциях и тд и тп......</div>
-    
-    <div class="location-selector">
-        <div class="dropdown-pair">
-            <select id="city_select" class="loc-dropdown">
-                <option value="">Укажите город</option>
-            </select>
-            <select id="metro_select" class="loc-dropdown" disabled>
-                <option value="">Укажите метро</option>
-            </select>
-        </div>
-
-        <button id="quick_search_btn" class="quick-search-btn">
-             <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Person%20Fencing.webp?raw=true" style="width:20px; vertical-align:middle"> Или нажмите сюда для быстрого поиска
-        </button>
-    </div>
-    
-    <button class="button" id="open_storefront_btn">Перейти к товарам</button>
-</div>
-
-<div id="storefront" class="screen" style="text-align:center;">
-    <div id="position_label">Позиция</div>
-
-    <div id="product_feed_container">
-        <div id="storefront_overlay">
-            <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Hourglass%20Not%20Done.webp?raw=true" style="width:100px;">
-            <p>Обновление локации...</p>
-        </div>
-
-        <div id="storefront_content">
-            <div id="unavailable_city_error" class="error-block" style="display:none;">
-                В вашем городе ничего нет, напишите в поддержку
-            </div>
-            <div class="product-grid" id="product_grid">
-                </div>
+<!-- SCREEN 1 -->
+<div id="welcome" class="screen active" style="text-align:center;">
+    <div style="width:100%; text-align:center;">
+        <br><br><br>
+        <div id="slideshow-container">
+            <img class="slide active" src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-3a66c45d8729100e.png?raw=true">
+            <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Purse.webp?raw=true">
+            <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true">
         </div>
     </div>
     
-    <button class="button" id="checkout_btn" style="margin-top: 30px; display: none;">
-        Нажмите, чтобы перейти к оплате покупки
-    </button>
+    <div style="text-align:center; color:white">
+        <div style="color:#6ab2f2"><b>Откройте мир без границ с Crypto Bot!</b></div><br>
+        Совершайте покупке в интернете, оплачивайте подписки, храните и переводите средства в любой валюте! <p><b>Быстро, анонимно и без скрытых комиссий.</b></p>
+    </div>
+    <button class="button" id="welcomeBtn">Открыть Crypto Bot Карту</button>
 </div>
 
+<!-- SCREEN 2 -->
+<div id="choose" class="screen">
+    <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Identification%20Card.webp?raw=true" style="width:200px; display:block; margin:0 auto;">
+    
+    <div style="text-align:center; color:white; font-weight:bold;">
+        Выберите тип карты для выпуска:
+    </div>
+    <div id="card-feed" class="feed">
+    <div class="option" data-name="Crypto Bot Online Card" data-price="52.5">
+        <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Laptop.webp?raw=true" alt="">
+        <div>
+            <div style="color:#6ab2f2">Crypto Bot Online Card - 52.5 USDT</div>
+            <div class="desc">Подойдёт для покупок в интернете, подписок, оплаты онлайн-сервисов (Netflix, ChatGPT, Spotify и тд.)</div>
+        </div>
+    </div>
 
+    <div class="option" data-name="Crypto Bot NFC Card" data-price="52.5">
+        <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true" alt="">
+        <div>
+            <div style="color:#6ab2f2">Crypto Bot NFC Card - 52.5 USDT</div>
+            <div class="desc">Подойдёт для привязки к GooglePay/ApplePay и оплаты через NFC-терминалы.</div>
+        </div>
+    </div>
+
+    <div class="option" data-name="Crypto Bot Ultima" data-price="99">
+        <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/New%20Button.webp?raw=true" alt="">
+        <div>
+            <div style="color:#6ab2f2">Crypto Bot Ultima - 99 USDT</div>
+            <div class="desc">Комбинация двух предыдущих пунктов. Карта подойдёт для любых целей.</div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- SCREEN 3 -->
 <div id="payment" class="screen">
-    <b id="pay_title" style="display: block;">Выпуск Crypto Bot Карты</b>
+    <b id="pay_title">Выпуск Crypto Bot Карты</b>
     <img src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-7e232c37d2a67cfd.webp?raw=true" style="width:300px; position: relative; top: 15px; z-index: 2;">
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;">
-  <b id="price_usdt" style="display: block;"></b> 
+
+         
+  <b id="price_usdt"></b> 
+    
     </div>
     
     <div style="color: #6ab2f2; position: relative; top: 10px; z-index: 2; background: #17212b; padding: 0 4px; font-size: 15px; margin-top: -10px;">Выберите валюту для оплаты:</div>
@@ -296,209 +439,70 @@ body {
     <div id="confetti-container" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; overflow:hidden;"></div>
 
     <br><br><br>
+
+  <div style="color:#17212b; font-size:13px; margin-bottom:5px;"> ..... </div>
+
+    
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/kjua@0.6.0/dist/kjua.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- КОНСТАНТЫ И ДАННЫЕ ---
     const screens = {
-        location_select: document.getElementById('location_select'),
-        storefront: document.getElementById('storefront'),
+        welcome: document.getElementById('welcome'),
+        choose: document.getElementById('choose'),
         payment: document.getElementById('payment')
     };
     const loader = document.getElementById('loader');
-    const storefrontOverlay = document.getElementById('storefront_overlay');
-    const storefrontContent = document.getElementById('storefront_content');
-    const unavailableError = document.getElementById('unavailable_city_error');
-    const positionLabel = document.getElementById('position_label');
-    const citySelect = document.getElementById('city_select');
-    const metroSelect = document.getElementById('metro_select');
-    const quickSearchBtn = document.getElementById('quick_search_btn');
-    const openStorefrontBtn = document.getElementById('open_storefront_btn');
-    const productGrid = document.getElementById('product_grid');
-
-    let selectedLocation = { city: null, metro: null };
-    let selectedProduct = { name: null, price: 0, discount: 0 }; // selected (переименован в selectedProduct)
-
-    // Данные для городов и метро (ПЛЕЙСХОЛДЕР)
-    const LOCATIONS = {
-        "Москва": ["Тверская", "Пушкинская", "Курская", "Белорусская"],
-        "Санкт-Петербург": ["Невский проспект", "Адмиралтейская", "Спортивная", "Горьковская"],
-        "Казань": ["Кремлёвская", "Площадь Тукая", "Аметьево"]
+    let selected = { name: null, price: 0, discount: 0 };
+    
+    // Предзагрузка картинок для тултипов
+    const preloadImages = [
+        'https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Bags.webp?raw=true',
+        'https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Purse.webp?raw=true',
+        'https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true',
+        'https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Pencil.webp?raw=true',
+        'https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Party%20Popper.webp?raw=true',
+        'https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/Cross%20Mark.webp?raw=true',
+        "https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Ticket.webp?raw=true",
+        "https://github.com/HuntersNetPlus/MaxSwap/blob/main/CupAnimation.webp?raw=true"
+    ];
+    preloadImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+   
+    
+    const wallets = {
+        USDT_TRC20: "TLZu5cha5JvmJiMAtdswudzfMJjxAwH6WH",
+        USDT_ERC20: "0xe1B6bEfAa7E23835b94950d38CfC160FBE876e52",
+        USDT_SOL: "AVQJ4s1Y9BrtEmnH5WrxPT818YibUJsaR4uU6Aiht647",
+        BTC: "bc1qvpzg2s44nnnpjqgqze2ppjtgdn6yltjlc2rjd4",
+        ETH: "0xe1B6bEfAa7E23835b94950d38CfC160FBE876e52",
+        LTC: "LS2Pg4V8AhaQ1FRweGUHfkBxtwFAbJ6Dpy",
+        USDC: "0xe1B6bEfAa7E23835b94950d38CfC160FBE876e52",
+        SBP: 'https://t.me/CryptoBotCardSupport?text=Здравствуйте!%20Хочу%20выпустить%20моментальную%20карту.%20Нужны%20реквизиты%20для%20оплаты.'
     };
-    const SERVICE_CITIES = Object.keys(LOCATIONS);
-    const UNAVAILABLE_CITY_PLACEHOLDER = "НеДоступный_Город"; // Для симуляции ошибки
 
-    // 30 рандомных товаров (ПЛЕЙСХОЛДЕР)
-    const PRODUCT_DATA = [];
-    for (let i = 1; i <= 30; i++) {
-        PRODUCT_DATA.push({
-            id: i,
-            name: "Позиция #" + i + " (8000 р)",
-            price: 8000 + (Math.floor(Math.random() * 5) * 100), // 8000, 8100, 8200...
-            image: "https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-7e232c37d2a67cfd.webp?raw=true" // Изображение с витрины
-        });
-    }
+ 
+      
 
-    // --- ФУНКЦИИ ---
-    
-    // Инициализация выпадающих списков
-    function initializeDropdowns() {
-        SERVICE_CITIES.forEach(city => {
-            const option = new Option(city, city);
-            citySelect.add(option);
-        });
-        
-        citySelect.addEventListener('change', handleCityChange);
-        metroSelect.addEventListener('change', handleMetroChange);
-    }
-    
-    // Обновление списка метро
-    function updateMetroDropdown(city) {
-        metroSelect.innerHTML = '<option value="">Укажите метро</option>';
-        if (city && LOCATIONS[city]) {
-            LOCATIONS[city].forEach(metro => {
-                const option = new Option(metro, metro);
-                metroSelect.add(option);
-            });
-            metroSelect.disabled = false;
-        } else {
-            metroSelect.disabled = true;
-        }
-    }
-    
-    // Генерирует карточки товаров
-    function renderProducts(city, metro) {
-        productGrid.innerHTML = '';
-        if (city && metro) {
-            PRODUCT_DATA.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.dataset.name = product.name;
-                card.dataset.price = product.price;
-                card.innerHTML = `
-                    <img src="${product.image}" alt="Product">
-                    <div class="product-title">${product.name}</div>
-                    <div class="product-price">${product.price} р</div>
-                    <button class="buy-button">Купить</button>
-                `;
-                card.querySelector('.buy-button').addEventListener('click', (e) => {
-                    e.stopPropagation(); // Отменяем всплытие, чтобы не сработал клик на карточку
-                    selectProduct(product.name, product.price);
-                });
-                card.addEventListener('click', () => {
-                    selectProduct(product.name, product.price); // Или клик по карточке ведет к покупке
-                });
-                productGrid.appendChild(card);
-            });
-            // Показываем витрину (Condition 1)
-            storefrontContent.style.display = 'block'; 
-        } else {
-            // Скрываем витрину, если нет метро (Condition 1)
-            storefrontContent.style.display = 'none';
-        }
-    }
-    
-    // Обновление витрины (логика Condition 4)
-    function updateStorefront(city, metro) {
-        // Condition 4: Показываем лоадер
-        showStorefrontOverlay(true);
-        
-        // Сброс ошибки
-        unavailableError.style.display = 'none';
-        
+    function openScreen(id) {
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        loader.style.display = 'flex';
         setTimeout(() => {
-            selectedLocation = { city, metro };
-            
-            if (city === UNAVAILABLE_CITY_PLACEHOLDER) {
-                // Condition 3: Ошибка недоступного города
-                unavailableError.style.display = 'block';
-                storefrontContent.style.display = 'block'; // Показываем контент, чтобы показать ошибку
-                positionLabel.textContent = "Позиция"; // Сброс надписи
-                renderProducts(null, null); // Стираем товары
-            } else if (city && metro) {
-                // Condition 2: Обновление надписи
-                positionLabel.textContent = `${city} ${metro}`;
-                // Показываем товары
-                renderProducts(city, metro);
-            } else {
-                 // Скрываем витрину, если нет метро (Condition 1)
-                positionLabel.textContent = "Позиция";
-                renderProducts(null, null);
-            }
-            
-            // Скрываем лоадер
-            showStorefrontOverlay(false);
-        }, 800); // Симуляция загрузки
-    }
-    
-    function showStorefrontOverlay(show) {
-        storefrontOverlay.style.display = show ? 'flex' : 'none';
-        // Для демонстрации, чтобы было видно, что лоадер перекрывает
-        // storefrontContent.style.opacity = show ? '0.3' : '1'; 
+            loader.style.display = 'none';
+            screens[id].classList.add('active');
+        }, 900);
     }
 
-    // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
-
-    // City Change
-    function handleCityChange() {
-        const city = citySelect.value;
-        updateMetroDropdown(city);
-        // При смене города, сбрасываем метро и обновляем витрину
-        selectedLocation.metro = null;
-        updateStorefront(city, null); 
-    }
-
-    // Metro Change (Condition 2)
-    function handleMetroChange() {
-        const metro = metroSelect.value;
-        const city = citySelect.value;
-        // Обновляем витрину, так как метро выбрано
-        updateStorefront(city, metro);
-    }
-    
-    // Quick Search (Condition 2)
-    quickSearchBtn.addEventListener('click', () => {
-        // Симуляция определения локации
-        const simulatedCity = SERVICE_CITIES[Math.floor(Math.random() * SERVICE_CITIES.length)];
-        const simulatedMetro = LOCATIONS[simulatedCity][Math.floor(Math.random() * LOCATIONS[simulatedCity].length)];
+    function selectOption(name, price) {
+        const discount = price * 0.5;
         
-        // Или симуляция недоступного города для теста Condition 3
-        // const simulatedCity = UNAVAILABLE_CITY_PLACEHOLDER; 
-        
-        // Присваиваем значения для обновления селектов
-        citySelect.value = simulatedCity;
-        updateMetroDropdown(simulatedCity);
-        metroSelect.value = simulatedMetro || '';
-        
-        // Обновляем витрину с новыми данными
-        updateStorefront(simulatedCity, simulatedMetro);
-        
-        // Переходим на витрину
-        openScreen('storefront');
-    });
-    
-    // Кнопка перехода на витрину
-    openStorefrontBtn.addEventListener('click', () => {
-        // Проверяем, выбрана ли локация
-        if (citySelect.value && metroSelect.value) {
-            updateStorefront(citySelect.value, metroSelect.value);
-            openScreen('storefront');
-        } else {
-             // Можно показать toast/сообщение об ошибке
-             alert('Сначала укажите город и метро!');
-        }
-    });
-
-    // Выбор продукта (аналог selectOption из оригинала)
-    function selectProduct(name, price) {
-        const discount = price * 0.1; // Уменьшил скидку для примера
-        
-        selectedProduct = { 
-            name: name, 
-            price: price,
-            discount: discount
+        selected = { 
+            name, 
+            price,
+            discount
         };
         
         document.getElementById('pay_title').innerText = name;
@@ -510,113 +514,117 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 250);
     }
 
-    // --- СТАНДАРТНЫЙ ФУНКЦИОНАЛ (немного адаптирован) ---
+async function updateConversion() {
+    const cur = document.getElementById("currency").value;
 
-    const wallets = {
-        USDT_TRC20: "TLZu5cha5JvmJiMAtdswudzfMJjxAwH6WH",
-        USDT_ERC20: "0xe1B6bEfAa7E23835b94950d38CfC160FBE876e52",
-        USDT_SOL: "AVQJ4s1Y9BrtEmnH5WrxPT818YibUJsaR4uU6Aiht647",
-        BTC: "bc1qvpzg2s44nnnpjqgqze2ppjtgdn6yltjlc2rjd4",
-        ETH: "0xe1B6bEfAa7E23835b94950d38CfC160FBE876e52",
-        LTC: "LS2Pg4V8AhaQ1FRweGUHfkBxtwFAbJ6Dpy",
-        USDC: "0xe1B6bEfAa7E23835b94950d38CfC160FBE876e52",
-        SBP: 'https://t.me/CryptoBotCardSupport?text=Здравствуйте!%20Хочу%20выпустить%20моментальную%20карту.%20Нужны%20реквизиты%20для%20оплаты.'
-    };
-    
-    function openScreen(id) {
-        Object.values(screens).forEach(s => s.classList.remove('active'));
-        loader.style.display = 'flex';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            screens[id].classList.add('active');
-        }, 900);
+    const qEl = document.getElementById('qrcode');
+    qEl.innerHTML = "";
+
+    // Генерация QR
+    if (wallets[cur]) {
+        const qrSvg = kjua({
+            render: 'svg',
+            text: wallets[cur],
+            size: 250,
+            fill: '#6ab2f2',
+            back: 'transparent',
+            rounded: 0,
+            quiet: 1
+        });
+        qEl.appendChild(qrSvg);
     }
 
-    async function updateConversion() {
-        const cur = document.getElementById("currency").value;
-        const qEl = document.getElementById('qrcode');
-        qEl.innerHTML = "";
+    const walletBlock = document.getElementById('wallet_address');
+    const w = wallets[cur];
 
-        if (wallets[cur]) {
-            const qrSvg = kjua({ render: 'svg', text: wallets[cur], size: 250, fill: '#6ab2f2', back: 'transparent', rounded: 0, quiet: 1 });
-            qEl.appendChild(qrSvg);
-        }
-
-        const walletBlock = document.getElementById('wallet_address');
-        const w = wallets[cur];
-
-        if (cur === "SBP" && w.startsWith("https://t.me/")) {
-            walletBlock.innerHTML = `<a href="${w}" class="sbp-link" target="_blank" rel="noopener">Перейдите по ссылке для оплаты</a>`;
-        } else {
-            walletBlock.innerText = w || "—";
-        }
-
-        const adressBox = document.querySelector('.address-box');
-        if (cur === "SBP") {
-            adressBox.classList.add("sbp-active");
-        } else {
-            adressBox.classList.remove("sbp-active");
-        }
-
-        if (cur === "SBP") {
-            const usdtToRub = 95;
-            // Теперь используем цену продукта (price в рублях для примера)
-            const amountRub = (selectedProduct.price).toFixed(0); 
-            document.getElementById('converted_amount').innerText = `${amountRub} RUB`;
-            return;
-        }
-
-        // ВАЖНО: ЦЕНЫ ТОВАРОВ ВВЕРХУ В РУБЛЯХ (8000 р). 
-        // Если оплата в крипте, нужно конвертировать из USDT (цена = 8000/95 ~ 84.21 USDT). 
-        // Для простоты, я буду считать 8000 РУБ = 84.21 USDT.
-        const usd_price = (selectedProduct.price / 95).toFixed(2); // Грубая конвертация для примера
+    // ✅ Если SBP — выводим анкорную ссылку
+    if (cur === "SBP" && w.startsWith("https://t.me/")) {
+        walletBlock.innerHTML = `<a href="${w}" class="sbp-link" target="_blank" rel="noopener">Перейдите по ссылке для оплаты</a>`;
         
-        if (cur.startsWith("USDT")) {
-            document.getElementById('converted_amount').innerText = `${usd_price} USDT`;
+    } else {
+        // Все остальные валюты — просто текст
+        walletBlock.innerText = w || "—";
+    }
+
+      // СМЕНА СТИЛЯ 
+    const adressBox = document.querySelector('.address-box');
+    if (cur === "SBP") {
+    adressBox.classList.add("sbp-active");
+} else {
+    adressBox.classList.remove("sbp-active");
+}
+
+    // --- Курс SBP ---
+    if (cur === "SBP") {
+        const usdtToRub = 95;
+        const amountRub = (selected.price * usdtToRub).toFixed(2);
+        document.getElementById('converted_amount').innerText = `${amountRub} RUB`;
+        return;
+    }
+
+    // --- USDT ---
+    if (cur.startsWith("USDT")) {
+        document.getElementById('converted_amount').innerText = `${selected.price} USDT`;
+        return;
+    }
+
+    // --- BTC / ETH / LTC / USDC ---
+    try {
+        const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,litecoin,usd-coin&vs_currencies=usd");
+        const data = await res.json();
+        const priceCryptoUSD = {
+            BTC: data.bitcoin?.usd || null,
+            ETH: data.ethereum?.usd || null,
+            LTC: data.litecoin?.usd || null,
+            USDC: data["usd-coin"]?.usd || null
+        };
+
+        const rate = priceCryptoUSD[cur];
+        if (!rate) {
+            document.getElementById('converted_amount').innerText = "Курс недоступен";
             return;
         }
 
-        try {
-            const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,litecoin,usd-coin&vs_currencies=usd");
-            const data = await res.json();
-            const priceCryptoUSD = {
-                BTC: data.bitcoin?.usd || null,
-                ETH: data.ethereum?.usd || null,
-                LTC: data.litecoin?.usd || null,
-                USDC: data["usd-coin"]?.usd || null
-            };
-
-            const rate = priceCryptoUSD[cur];
-            if (!rate) {
-                document.getElementById('converted_amount').innerText = "Курс недоступен";
-                return;
-            }
-
-            const converted = (usd_price / rate).toFixed(6);
-            document.getElementById('converted_amount').innerText = `${converted} ${cur}`;
-        } catch (e) {
-            console.warn(e);
-            document.getElementById('converted_amount').innerText = "Ошибка загрузки курса";
-        }
+        const converted = (selected.price / rate).toFixed(6);
+        document.getElementById('converted_amount').innerText = `${converted} ${cur}`;
+    } catch (e) {
+        console.warn(e);
+        document.getElementById('converted_amount').innerText = "Ошибка загрузки курса";
     }
+}
 
 
-    function generateRandomId(length = 10) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let id = '';
-        for (let i = 0; i < length; i++) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
+
+     function generateRandomId(length = 10) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let id = '';
+    for (let i = 0; i < length; i++) {
+      id += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return id;
+  }
 
-    document.getElementById("randomId").textContent = generateRandomId();
+  // Вставляем случайный ID в span
+  document.getElementById("randomId").textContent = generateRandomId();
+    
+
+    // Кнопка открытия
+    document.getElementById('welcomeBtn').addEventListener('click', () => openScreen('choose'));
+
+    // Выбор опции
+    document.querySelectorAll('#choose .option').forEach(opt => {
+        opt.addEventListener('click', () => selectOption(opt.dataset.name, parseFloat(opt.dataset.price)));
+    });
+
+    // Смена валюты
     document.getElementById('currency').addEventListener('change', updateConversion);
 
+    // Копирование адреса
     document.getElementById('copy_address').addEventListener('click', function() {
         const text = document.getElementById('wallet_address').innerText;
         if (!text || text === '—') return;
         
+        // Для СБП открываем ссылку вместо копирования
         const cur = document.getElementById("currency").value;
         if (cur === "SBP" && text.startsWith("https://t.me/")) {
             window.open(text, '_blank');
@@ -631,26 +639,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }).catch(()=>{ /* ignore */ });
     });
 
-    document.querySelectorAll('.tooltip').forEach(t => {
-        t.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelectorAll('.tooltip.show').forEach(open => {
-                if (open !== this) open.classList.remove('show');
-            });
-            this.classList.add('show');
-        });
-    });
+    // Тултипы
+document.querySelectorAll('.tooltip').forEach(t => {
+    t.addEventListener('click', function(e) {
+        e.stopPropagation(); // не даём документу тут же закрыть
 
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.tooltip.show').forEach(t => {
-            t.classList.remove('show');
+        // Сначала закрываем все другие тултипы
+        document.querySelectorAll('.tooltip.show').forEach(open => {
+            if (open !== this) open.classList.remove('show');
         });
+
+        // Открываем текущий
+        this.classList.add('show');
     });
+});
+
+// Закрытие по клику вне
+document.addEventListener('click', () => {
+    document.querySelectorAll('.tooltip.show').forEach(t => {
+        t.classList.remove('show');
+    });
+});
 
     // ПРОМОКОД
     const VALID_PROMOS = ["VARLAMOV", "ВАРЛАМОВ", "КАЦ", "KATZ", "ФРОНТ", "СВОБОДА", "SWAP"];
+    
     const promoInput = document.getElementById("promo_input");
-    promoInput.addEventListener('input', () => { promoInput.value = promoInput.value.toUpperCase(); });
+    promoInput.addEventListener('input', () => {
+        promoInput.value = promoInput.value.toUpperCase();
+    });
+    
     const promoBtn = document.getElementById("promo_btn");
     const promoLabel = document.getElementById("promo_label");
     const confettiContainer = document.getElementById("confetti-container");
@@ -668,23 +686,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (VALID_PROMOS.includes(code)) {
-            const discount = selectedProduct.discount;
+            const discount = selected.discount;
+            
             promoLabel.innerHTML = '<img src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/CupAnimation.webp?raw=true" style="width:20px;vertical-align:middle;"> <b> Промокод успешно активирован!</b>';
             promoLabel.classList.add("gold-glow");
 
             showGlassToast(`
                 <div style="text-align:center;">
                     <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Party%20Popper.webp?raw=true" style="width:70px;"><br>
-                    <div><b>Промокод ${code} успешно принят!</b><br><br> После активации карты на баланс будет дополнительно зачислено <br> ${discount.toFixed(2)} USD! <br><br> <b>Этот промокод действует 24 часа!</b></div>
+                    <div><b>Промокод ${code} успешно принят!</b><br><br> После активации карты на баланс будет дополнительно зачислено <br> ${discount} USD! <br><br> <b>Этот промокод действует 24 часа!</b></div>
                 </div>
             `);
 
             launchConfetti();
-            promoInput.disabled = true;
-            promoBtn.disabled = true;
-            promoInput.style.opacity = '0.5';
-            promoBtn.style.opacity = '0.5';
-        } else {
+            
+          // Отключаем возможность повторного ввода
+    promoInput.disabled = true;
+    promoBtn.disabled = true;
+    promoInput.style.opacity = '0.5';
+    promoBtn.style.opacity = '0.5';
+}   
+          
+         else {
             promoLabel.innerHTML = '<img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Activity/Ticket.webp?raw=true" style="width:20px; vertical-align:middle"> <b>Есть промокод? Введи его ниже!</b>';
             promoLabel.classList.remove("gold-glow");
 
@@ -697,9 +720,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Стеклянный тултип
     let toast = null;
     function showGlassToast(htmlContent, duration = 0) {
         if (toast) toast.remove();
+
         toast = document.createElement("div");
         toast.className = "tooltip-glass";
         toast.innerHTML = htmlContent;
@@ -722,20 +747,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById("time").textContent = new Date().toTimeString().slice(0,8);
+     document.getElementById("time").textContent = new Date().toTimeString().slice(0,8);
 
+    
+
+    // Конфетти
     function launchConfetti() {
         confettiContainer.innerHTML = "";
+
         for (let i = 0; i < 90; i++) {
             const c = document.createElement("div");
             c.className = "confetti-piece";
+
             const colors = ["#ff4757", "#ffa502", "#2ed573", "#1e90ff", "#ff6b81"];
             c.style.background = colors[Math.floor(Math.random() * colors.length)];
+
             c.style.left = (Math.random() * 100) + "%";
             c.style.top = "100%";
+
             confettiContainer.appendChild(c);
+
             const dx = (Math.random() - 0.5) * 600;
             const dy = -600 - Math.random() * 400;
+
             c.animate([
                 { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
                 { transform: `translate(${dx}px, ${dy}px) rotate(360deg)`, opacity: 0 }
@@ -743,14 +777,95 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 3200 + Math.random() * 700,
                 easing: "cubic-bezier(.2,.7,.2,1)"
             });
+
             setTimeout(() => c.remove(), 5000);
         }
     }
 
-    // Инициализация при загрузке
-    initializeDropdowns();
-    updateStorefront(null, null); // Изначально скрываем витрину
-}); 
+
+// ---- 20 заранее созданных карточек ----
+const CARDS = [
+    "Max Swap Online Card",
+    "Max Swap NFC Card",
+    "Max Swap Ultima",
+    "Premium Account Upgrade",
+    "VIP Gold Card",
+    "Daily Investment Pass",
+    "Boost 1",
+    "Boost 2",
+    "Boost 3",
+    "Crypto Vault Access",
+    "Referral Bundle",
+    "USDT Wallet Upgrade",
+    "SOL Power Pack",
+    "FastTrack Activation",
+    "Premium Gift Pack",
+    "Early Access Beta",
+    "Diamond Status",
+    "Platinum Access",
+    "Multichain Upgrade",
+    "Bonus Bundle"
+];
+
+// перемешивание массива
+function shuffle(arr) {
+    return arr
+        .map(a => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(a => a.value);
+}
+
+const feed = document.getElementById("card-feed");
+
+// загружает одну партию (20 элементов в перемешанном виде)
+function loadBatch() {
+    const shuffled = shuffle(CARDS);
+
+    shuffled.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "feed-item";
+        div.innerText = item;
+        feed.appendChild(div);
+    });
+}
+
+// первый запуск
+loadBatch();
+
+// бесконечная подгрузка
+feed.addEventListener("scroll", () => {
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 10) {
+        loadBatch();
+    }
+});
+
+
+
+
+    
+
+    // Слайдшоу
+    const slides = document.querySelectorAll(".slide");
+    let index = 0;
+    const total = slides.length;
+
+    function nextSlide() {
+        if (total === 0) return;
+        
+        const current = slides[index];
+        current.classList.remove("active");
+        current.classList.add("out");
+
+        index = (index + 1) % total;
+        const next = slides[index];
+        next.classList.remove("out");
+        next.classList.add("active");
+    } 
+
+    setInterval(nextSlide, 3000);
+
+}); // КОНЕЦ DOMContentLoaded
+
 </script>
 
 </body>
