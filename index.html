@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini App Продажи</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-app-container">
+        <div class="ticker">
+            <p>Бегущая строка с текстом об акциях и т.д. и т.п......</p>
+        </div>
+        
+        <div class="controls-container">
+            <div class="control-box">
+                <img src="abacus.png" alt="Город">
+                <select id="city-select">
+                    <option value="" disabled selected>Укажите город</option>
+                    <option value="Москва">Москва</option>
+                    <option value="Питер">Санкт-Петербург</option>
+                    <option value="Новосиб">Новосибирск</option>
+                    <option value="Казань">Казань</option>
+                    <option value="Самара">Самара</option>
+                    <option value="Нижний Новгород">Нижний Новгород</option>
+                    <option value="Екатеринбург">Екатеринбург</option>
+                    <option value="Другой">Другой город</option>
+                </select>
+            </div>
+            
+            <div class="control-box">
+                <img src="briefcase.png" alt="Метро">
+                <input list="metro-options" id="metro-input" placeholder="Укажите метро" disabled>
+                <datalist id="metro-options">
+                    </datalist>
+            </div>
+        </div>
+        
+        <button id="quick-search-btn" class="quick-search-button">
+            <span class="icon"></span> Или нажмите сюда для быстрого поиска
+        </button>
+        
+        <div id="product-block-title" class="product-title">Позиция</div>
+
+        <div id="product-slider-container" class="slider-container">
+            <div id="product-slider" class="product-slider">
+                <div class="product-card placeholder" id="placeholder-card">
+                    <p class="placeholder-text">Здесь будут предложения</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="checkout-button" class="checkout-button hidden">
+            Нажмите, чтобы перейти к оплате покупки
+        </button>
+    </div>
+
+    <div id="payment-page" class="payment-page hidden">
+        <h2>Оплата Позиции</h2>
+        <div id="payment-product-info">
+            </div>
+        <hr>
+        
+        <p>ID Заказа: <span id="order-id"></span></p>
+        <p>Текущее Время: <span id="current-time"></span></p>
+        <p>ID Профиля: <span id="profile-id"></span></p>
+        
+        <div class="currency-block">
+            <label for="currency-select">Выберите валюту:</label>
+            <select id="currency-select">
+                <option value="RUB" selected>RUB (Рубли)</option>
+                <option value="USD">USD (Доллары)</option>
+                <option value="EUR">EUR (Евро)</option>
+            </select>
+        </div>
+
+        <div class="promo-block">
+            <label for="promo-input">Промокод:</label>
+            <input type="text" id="promo-input" placeholder="Введите промокод">
+            <button id="apply-promo-btn">Применить</button>
+        </div>
+
+        <p class="final-price">Итоговая Цена: <span id="final-price"></span></p>
+        
+        <div id="payment-details">
+            </div>
+
+        <button id="back-to-main" class="back-button">Вернуться к выбору</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
