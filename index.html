@@ -912,7 +912,7 @@ initFeed();
 
 // Обработчик прокрутки
 feed.addEventListener("scroll", () => {
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 5) {
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 0) {
         // Добавляем ещё один перемешанный набор
         const shuffled = shuffle([...originalOptions]);
         shuffled.forEach(opt => {
