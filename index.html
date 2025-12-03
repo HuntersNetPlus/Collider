@@ -887,30 +887,28 @@ function attachClickHandler(optionElem) {
     });
 }
 
-// Навешиваем обработчики на оригиналы
-originalOptions.forEach(opt => attachClickHandler(opt));
+// Перемешиваем исходные элементы для первой загрузки
+const shuffledInitial = shuffle([...originalOptions]);
 
-// Функция перемешивания
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
+// Очищаем feed и добавляем перемешанные элементы
+feed.innerHTML = "";
+shuffledInitial.forEach(opt => {
+    const clone = opt.cloneNode(true);
+    attachClickHandler(clone);
+    feed.appendChild(clone);
+});
 
-// Обработчик прокрутки
+// Теперь навешиваем обработчик прокрутки
 feed.addEventListener("scroll", () => {
     if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
         const shuffled = shuffle([...originalOptions]);
         shuffled.forEach(opt => {
             const clone = opt.cloneNode(true);
-            attachClickHandler(clone); // навешиваем клик
+            attachClickHandler(clone);
             feed.appendChild(clone);
         });
     }
 
-    // Чтобы блок не разрастался бесконечно
     if (feed.children.length > 30) {
         feed.innerHTML = "";
         const shuffled = shuffle([...originalOptions]);
@@ -922,6 +920,7 @@ feed.addEventListener("scroll", () => {
         feed.scrollTop = 0;
     }
 });
+
 
 
 
