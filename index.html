@@ -335,33 +335,21 @@ body {
 
 <div id="loader"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Hourglass%20Not%20Done.webp?raw=true" style="width:200px;"></div>
 
-<!-- SCREEN 1: Приветственный экран -->
-<div id="welcome" class="screen active" style="text-align:center; color:white; padding:20px;">
-    <h2>Выберите город и метро</h2>
-    
-    <div style="margin-top:20px;">
-        <select id="city-select">
-            <option value="">Выберите город</option>
-            <option value="Москва">Москва</option>
-            <option value="Питер">Санкт-Петербург</option>
-            <option value="Новосиб">Новосибирск</option>
-            <option value="Казань">Казань</option>
-            <option value="Самара">Самара</option>
-            <option value="Нижний новгород">Нижний Новгород</option>
-            <option value="Екатеринбург">Екатеринбург</option>
-        </select>
-    </div>
 
-    <div style="margin-top:20px;">
-        <select id="metro-select" disabled>
-            <option value="">Сначала выберите город</option>
-        </select>
-    </div>
 
-    <div style="margin-top:20px;">
-        <button id="geo-btn">Определить вручную</button>
-    </div>
+
+<div id="welcome" class="active">
+    <h2>Добро пожаловать!</h2>
+    <button id="geo-btn">Определить местоположение</button>
 </div>
+
+<div id="choose">
+    <!-- Экран выбора товаров -->
+</div>
+
+<div id="loader" style="display:none;">Загрузка...</div>
+
+
 
 
 
@@ -554,88 +542,6 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/kjua@0.6.0/dist/kjua.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    // ===== ЭКРАН ВЫБОРА ГОРОДА И МЕТРО =====
-    const validCities = ["Москва", "Питер", "Новосиб", "Казань", "Самара", "Нижний новгород", "Екатеринбург"];
-    const citySelect = document.getElementById("city-select");
-    const metroSelect = document.getElementById("metro-select");
-    const geoBtn = document.getElementById("geo-btn");
-
-    const cityToMetro = {
-        "Москва": ["Кропоткинская", "Арбатская", "Пушкинская"],
-        "Питер": ["Адмиралтейская", "Невский проспект"],
-        "Новосиб": ["Площадь Ленина", "Гагаринская"],
-        "Казань": ["Кремлёвская", "Проспект Победы"],
-        "Самара": ["Безымянка", "Советская"],
-        "Нижний новгород": ["Парк Культуры", "Горьковская"],
-        "Екатеринбург": ["Площадь 1905 года", "Уралмаш"]
-    };
-
-    // Простейший стеклянный тултип
-    let toast = null;
-    function showGlassToast(htmlContent, duration = 2000) {
-        if (toast) toast.remove();
-        toast = document.createElement("div");
-        toast.className = "tooltip-glass";
-        toast.innerHTML = htmlContent;
-        document.body.appendChild(toast);
-        setTimeout(() => { if(toast) toast.remove(); toast=null; }, duration);
-    }
-
-    // Выбор города
-    citySelect.addEventListener('change', () => {
-        const city = citySelect.value;
-        if (!city || !validCities.includes(city)) {
-            metroSelect.innerHTML = `<option value="">Сначала выберите город</option>`;
-            metroSelect.disabled = true;
-            if(city) showGlassToast("В вашем городе ничего нет", 2000);
-            return;
-        }
-        metroSelect.disabled = false;
-        metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
-        cityToMetro[city].forEach(station => {
-            const opt = document.createElement('option');
-            opt.value = station;
-            opt.textContent = station;
-            metroSelect.appendChild(opt);
-        });
-    });
-
-    // После выбора метро — переход на экран выбора товаров
-    metroSelect.addEventListener('change', () => {
-        if (metroSelect.value) {
-            openScreen('choose');
-        }
-    });
-
-    // Геолокация
-    geoBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) {
-            showGlassToast("Геолокация не поддерживается", 2000);
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(pos => {
-            // Пример: рандомный город
-            const randomCity = validCities[Math.floor(Math.random() * validCities.length)];
-            citySelect.value = randomCity;
-            metroSelect.disabled = false;
-            metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
-            cityToMetro[randomCity].forEach(station => {
-                const opt = document.createElement('option');
-                opt.value = station;
-                opt.textContent = station;
-                metroSelect.appendChild(opt);
-            });
-            metroSelect.selectedIndex = 1;
-            openScreen('choose');
-        }, () => {
-            showGlassToast("Не удалось определить местоположение", 2000);
-        });
-    });
-    
-    
-    
-    
     const screens = {
         welcome: document.getElementById('welcome'),
         choose: document.getElementById('choose'),
@@ -1030,14 +936,71 @@ feed.addEventListener("scroll", () => {
 
 
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
+    const validCities = ["Москва", "Питер", "Новосиб", "Казань", "Самара", "Нижний новгород", "Екатеринбург"];
+    const geoBtn = document.getElementById("geo-btn");
 
- 
+    const screens = {
+        welcome: document.getElementById('welcome'),
+        choose: document.getElementById('choose')
+    };
+    const loader = document.getElementById('loader');
+
+    // Тултип
+    let toast = null;
+    function showGlassToast(message, duration = 2000) {
+        if (toast) toast.remove();
+        toast = document.createElement("div");
+        toast.className = "tooltip-glass";
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => { if(toast) toast.remove(); toast=null; }, duration);
+    }
+
+    // Открыть экран
+    function openScreen(id) {
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        loader.style.display = 'flex';
+        setTimeout(() => {
+            loader.style.display = 'none';
+            screens[id].classList.add('active');
+        }, 900);
+    }
+
+    // Автоопределение локации
+    geoBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            showGlassToast("Геолокация не поддерживается", 2000);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(pos => {
+            const { latitude, longitude } = pos.coords;
+
+            // В реальном проекте здесь нужно API геокодирования, пока для примера рандомный город
+            const detectedCity = validCities[Math.floor(Math.random() * validCities.length)];
+
+            if (!validCities.includes(detectedCity)) {
+                showGlassToast("В вашем городе ничего нет", 2000);
+                return;
+            }
+
+            openScreen('choose');
+
+        }, err => {
+            showGlassToast("Не удалось определить местоположение", 2000);
+        });
+    });
+
+});
+</script>
+
 
     
 
 
-    
     function nextSlide() {
         if (total === 0) return;
         
