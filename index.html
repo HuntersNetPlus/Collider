@@ -785,32 +785,46 @@ document.addEventListener('click', () => {
 
 // FEED
 
-    const feed = document.getElementById("feed");
-
-// Сохраняем исходные 3 элемента
+const feed = document.getElementById("card-feed");
 const originalOptions = Array.from(feed.querySelectorAll(".option"));
 
-// Клонирование блока при прокрутке
-feed.addEventListener("scroll", () => {
-    // Когда дошли почти до конца — добавляем новые 3
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
+// Функция навешивает обработчик клика на карту
+function attachClickHandler(optionElem) {
+    optionElem.addEventListener("click", () => {
+        selectOption(
+            optionElem.dataset.name,
+            parseFloat(optionElem.dataset.price)
+        );
+    });
+}
 
+// Навешиваем обработчики на оригиналы
+originalOptions.forEach(opt => attachClickHandler(opt));
+
+feed.addEventListener("scroll", () => {
+
+    // Если почти достигли низа — клонируем товары
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
+        
         originalOptions.forEach(opt => {
             const clone = opt.cloneNode(true);
+            attachClickHandler(clone);   // ← заново навешиваем обработчик
             feed.appendChild(clone);
         });
     }
 
-    // Чтобы блок не разрастался бесконечно — перезапускаем цикл
-    if (feed.children.length > 30) { 
+    // Чтобы блок не стал бесконечно огромным — перезапуск
+    if (feed.children.length > 30) {
         feed.innerHTML = "";
         originalOptions.forEach(opt => {
             const clone = opt.cloneNode(true);
+            attachClickHandler(clone);
             feed.appendChild(clone);
         });
         feed.scrollTop = 0;
     }
 });
+
 
 
 
