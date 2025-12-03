@@ -335,23 +335,39 @@ body {
 
 <div id="loader"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Hourglass%20Not%20Done.webp?raw=true" style="width:200px;"></div>
 
-<!-- SCREEN 1 -->
-<div id="welcome" class="screen active" style="text-align:center;">
-    <div style="width:100%; text-align:center;">
-        <br><br><br>
-        <div id="slideshow-container">
-            <img class="slide active" src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-3a66c45d8729100e.png?raw=true">
-            <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Purse.webp?raw=true">
-            <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true">
-        </div>
-    </div>
+<!-- SCREEN 1: Приветственный экран -->
+<div id="welcome" class="screen active" style="text-align:center; color:white; padding:20px;">
+    <h2>Выберите город и метро</h2>
     
-    <div style="text-align:center; color:white">
-        <div style="color:#6ab2f2"><b>Откройте мир без границ с Crypto Bot!</b></div><br>
-        Совершайте покупке в интернете, оплачивайте подписки, храните и переводите средства в любой валюте! <p><b>Быстро, анонимно и без скрытых комиссий.</b></p>
+    <div style="margin-top:20px;">
+        <select id="city-select">
+            <option value="">Выберите город</option>
+            <option value="Москва">Москва</option>
+            <option value="Питер">Санкт-Петербург</option>
+            <option value="Новосиб">Новосибирск</option>
+            <option value="Казань">Казань</option>
+            <option value="Самара">Самара</option>
+            <option value="Нижний новгород">Нижний Новгород</option>
+            <option value="Екатеринбург">Екатеринбург</option>
+        </select>
     </div>
-    <button class="button" id="welcomeBtn">Открыть Crypto Bot Карту</button>
+
+    <div style="margin-top:20px;">
+        <select id="metro-select" disabled>
+            <option value="">Сначала выберите город</option>
+        </select>
+    </div>
+
+    <div style="margin-top:20px;">
+        <button id="geo-btn">Определить вручную</button>
+    </div>
 </div>
+
+
+
+
+
+    
 
 <!-- SCREEN 2 -->
 <div id="choose" class="screen">
@@ -929,6 +945,121 @@ feed.addEventListener("scroll", () => {
 
 
 
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const validCities = ["Москва", "Питер", "Новосиб", "Казань", "Самара", "Нижний новгород", "Екатеринбург"];
+    
+    const citySelect = document.getElementById("city-select");
+    const metroSelect = document.getElementById("metro-select");
+    const geoBtn = document.getElementById("geo-btn");
+
+    const cityToMetro = {
+        "Москва": ["Кропоткинская", "Арбатская", "Пушкинская"],
+        "Питер": ["Адмиралтейская", "Невский проспект"],
+        "Новосиб": ["Площадь Ленина", "Гагаринская"],
+        "Казань": ["Кремлёвская", "Проспект Победы"],
+        "Самара": ["Безымянка", "Советская"],
+        "Нижний новгород": ["Парк Культуры", "Горьковская"],
+        "Екатеринбург": ["Площадь 1905 года", "Уралмаш"]
+    };
+
+    // Выбор города
+    citySelect.addEventListener('change', () => {
+        const city = citySelect.value;
+        if (!city || !validCities.includes(city)) {
+            metroSelect.innerHTML = `<option value="">Сначала выберите город</option>`;
+            metroSelect.disabled = true;
+            if(city) showGlassToast("В вашем городе ничего нет", 2000);
+            return;
+        }
+
+        // Заполняем метро
+        metroSelect.disabled = false;
+        metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
+        cityToMetro[city].forEach(station => {
+            const opt = document.createElement('option');
+            opt.value = station;
+            opt.textContent = station;
+            metroSelect.appendChild(opt);
+        });
+    });
+
+    // После выбора метро — переходим на экран товаров
+    metroSelect.addEventListener('change', () => {
+        if (metroSelect.value) {
+            openScreen('choose');
+        }
+    });
+
+    // Определение через геолокацию
+    geoBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            showGlassToast("Геолокация не поддерживается", 2000);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            // Для примера, будем рандомно выбирать город из списка
+            // В реальном проекте можно подключить API геокодирования
+            const randomCity = validCities[Math.floor(Math.random() * validCities.length)];
+
+            if (!validCities.includes(randomCity)) {
+                showGlassToast("В вашем городе ничего нет", 2000);
+                return;
+            }
+
+            citySelect.value = randomCity;
+
+            // Заполняем метро
+            metroSelect.disabled = false;
+            metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
+            cityToMetro[randomCity].forEach(station => {
+                const opt = document.createElement('option');
+                opt.value = station;
+                opt.textContent = station;
+                metroSelect.appendChild(opt);
+            });
+
+            // Автоматически выбираем первую станцию
+            metroSelect.selectedIndex = 1;
+
+            // Переходим на экран выбора товаров
+            openScreen('choose');
+
+        }, err => {
+            showGlassToast("Не удалось определить местоположение", 2000);
+        });
+    });
+
+    // Простейший стеклянный тултип (из твоего текущего кода)
+    let toast = null;
+    function showGlassToast(htmlContent, duration = 2000) {
+        if (toast) toast.remove();
+
+        toast = document.createElement("div");
+        toast.className = "tooltip-glass";
+        toast.innerHTML = htmlContent;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if(toast) toast.remove();
+            toast = null;
+        }, duration);
+    }
+
+});
+
+
+    
     function nextSlide() {
         if (total === 0) return;
         
