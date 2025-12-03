@@ -886,7 +886,7 @@ function attachClickHandler(optionElem) {
     });
 }
 
-// Функция перемешивания массива (Fisher-Yates)
+// Перемешиваем исходные элементы для первой загрузки
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -895,40 +895,38 @@ function shuffle(array) {
     return array;
 }
 
-// Инициализация feed при первой загрузке
+// Инициализация feed с перемешанными элементами
 function initFeed() {
+    const shuffled = shuffle([...originalOptions]);
     feed.innerHTML = "";
-    // Добавляем несколько циклов перемешанных элементов, чтобы scrollHeight > clientHeight
-    for (let cycle = 0; cycle < 5; cycle++) {
-        const shuffled = shuffle([...originalOptions]);
-        shuffled.forEach(opt => {
-            const clone = opt.cloneNode(true);
-            attachClickHandler(clone);
-            feed.appendChild(clone);
-        });
-    }
+    shuffled.forEach(opt => {
+        const clone = opt.cloneNode(true);
+        attachClickHandler(clone);
+        feed.appendChild(clone);
+    });
 }
+
 initFeed();
 
-// Обработчик прокрутки
+// Постепенное добавление элементов при скролле
 feed.addEventListener("scroll", () => {
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 0) {
-        // Добавляем ещё один перемешанный набор
+    // Срабатываем только если почти дошли до низа
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 5) {
         const shuffled = shuffle([...originalOptions]);
-        shuffled.forEach(opt => {
-            const clone = opt.cloneNode(true);
-            attachClickHandler(clone);
-            feed.appendChild(clone);
-        });
+        
+        // Добавляем по одному элементу за раз
+        const clone = shuffled[0].cloneNode(true);
+        attachClickHandler(clone);
+        feed.appendChild(clone);
     }
 
-    // Ограничиваем общее количество элементов
-    if (feed.children.length > 50) {
-        feed.innerHTML = "";
+    // Чтобы блок не разрастался бесконечно — перезапускаем, когда > 30 элементов
+    if (feed.children.length > 30) {
         initFeed();
         feed.scrollTop = 0;
     }
 });
+
 
 
     function nextSlide() {
