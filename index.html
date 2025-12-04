@@ -84,50 +84,44 @@ body {
 
 
 
-.blocked-text-wrapper {
-     
-    max-width: 70%;
-}
-
 .blocked-text {
     position: relative;
-    background: #253648;
-    border-radius: 4px;
-    color: transparent;
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+    display: inline-block;
+    padding: 6px 10px;
+    background: rgba(106, 178, 242, 0.15);
+    border-radius: 6px;
+    color: #6ab2f2;
+    filter: blur(5px);
     cursor: pointer;
     user-select: none;
-    overflow: hidden;
     transition: transform 0.2s;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-size: 15px;
 }
 
 .blocked-text:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
 }
 
-.blocked-text::before {
+.blocked-text::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
     pointer-events: none;
-    z-index: 1;
+    z-index: 10;
 }
 
 .blocked-text .text-pixel {
     position: absolute;
     width: 2px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 2;
+    z-index: 15;
 }
 
 
@@ -676,12 +670,15 @@ body {
     <div class="blocked-photo" data-id="67"></div>
     <div class="blocked-photo" data-id="89"></div>
 </div>
-    <div class="blocked-text-wrapper">
-    <div class="blocked-text">
-        44543359.4599828 магнит под капотом у ламборгини торт умный человек в очках скачать бесплатно
-    </div>
+
+    
+   <div class="blocked-text-wrapper">
+    <span class="blocked-text">Николаев, ул. Ленина 45, подъезд 2, домофон 125, магнит под лавочкой у дерева</span>
 </div>
-        
+
+
+
+    
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;">
 
          
@@ -1255,14 +1252,19 @@ feed.addEventListener("scroll", () => {
     }
     
     blockedTexts.forEach((textBlock, idx) => {
-        // Создаём 40 бегающих пикселей
-        for (let i = 0; i < 80; i++) {
+        // Получаем размеры текстового блока
+        const rect = textBlock.getBoundingClientRect();
+        
+        // Создаём пиксели пропорционально размеру текста
+        const pixelCount = Math.max(30, Math.floor(rect.width / 8));
+        
+        for (let i = 0; i < pixelCount; i++) {
             const pixel = document.createElement('div');
             pixel.className = 'text-pixel';
             
             const startX = Math.random() * 100;
             const startY = Math.random() * 100;
-            const duration = 2.5 + Math.random() * 2.5;
+            const duration = 2 + Math.random() * 3;
             const delay = Math.random() * 2;
             
             pixel.style.left = startX + '%';
@@ -1278,12 +1280,12 @@ feed.addEventListener("scroll", () => {
                     0%, 100% { 
                         left: ${startX}%; 
                         top: ${startY}%; 
-                        opacity: 0.8;
+                        opacity: 0.85;
                     }
                     50% { 
                         left: ${endX}%; 
                         top: ${endY}%; 
-                        opacity: 0.25;
+                        opacity: 0.3;
                     }
                 }
             `;
