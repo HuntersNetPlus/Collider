@@ -36,7 +36,7 @@ body {
     position: relative;
     width: 20vw;
     max-width: 100px;
-    height: 20vw;
+    height: 15vw;
     max-height: 100px;
     border-radius: 4px;
     overflow: hidden;
@@ -611,7 +611,7 @@ body {
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
     
   
-  <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> Данные заказа #<span id="randomId"></div>
+  <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> Данные заказа #<span id="orderNum"></span></div>
 
     <div id="blocked-photos-container" style="
     display: flex;
@@ -1199,7 +1199,7 @@ feed.addEventListener("scroll", () => {
 
 
 
-
+document.getElementById('orderNum').innerText = Math.floor(1000000 + Math.random() * 9000000);
 
 
     
