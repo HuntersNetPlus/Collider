@@ -23,20 +23,6 @@ body {
     }
 
 
-.welcome-screen {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-select, button {
-    padding: 10px;
-    font-size: 16px;
-}
-button:disabled {
-    opacity: 0.4;
-}
 
     .sbp-link {
     color: #17212b;       /* цвет текста */
@@ -350,32 +336,21 @@ button:disabled {
 <div id="loader"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Hourglass%20Not%20Done.webp?raw=true" style="width:200px;"></div>
 
 <!-- SCREEN 1 -->
-<div id="welcome" class="welcome-screen">
-    <h2>Выберите город и метро</h2>
-
-    <label>Город:</label>
-    <select id="city">
-        <option value="">— выберите город —</option>
-        <option value="moscow">Москва</option>
-        <option value="spb">Санкт-Петербург</option>
-        <option value="nsk">Новосибирск</option>
-        <option value="kazan">Казань</option>
-        <option value="samara">Самара</option>
-        <option value="nnov">Нижний Новгород</option>
-        <option value="ekb">Екатеринбург</option>
-    </select>
-
-    <label>Метро:</label>
-    <select id="metro" disabled>
-        <option value="">— выберите метро —</option>
-    </select>
-
-    <button id="confirm-btn" disabled>Подтвердить</button>
-</div>
-
- <div id="products" style="display:none;">
-    <!-- Здесь твой фид товаров -->
-    <h2>Товары</h2>
+<div id="welcome" class="screen active" style="text-align:center;">
+    <div style="width:100%; text-align:center;">
+        <br><br><br>
+        <div id="slideshow-container">
+            <img class="slide active" src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-3a66c45d8729100e.png?raw=true">
+            <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Purse.webp?raw=true">
+            <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true">
+        </div>
+    </div>
+    
+    <div style="text-align:center; color:white">
+        <div style="color:#6ab2f2"><b>Откройте мир без границ с Crypto Bot!</b></div><br>
+        Совершайте покупке в интернете, оплачивайте подписки, храните и переводите средства в любой валюте! <p><b>Быстро, анонимно и без скрытых комиссий.</b></p>
+    </div>
+    <button class="button" id="welcomeBtn">Открыть Crypto Bot Карту</button>
 </div>
 
 <!-- SCREEN 2 -->
@@ -954,13 +929,6 @@ feed.addEventListener("scroll", () => {
 
 
 
-
-
-
-
-
-    
-
     function nextSlide() {
         if (total === 0) return;
         
@@ -978,62 +946,6 @@ feed.addEventListener("scroll", () => {
 
 }); // КОНЕЦ DOMContentLoaded
 
-  
-
-// Список станций по городам
-const METRO = {
-    moscow: ["Охотный ряд", "Китай-город", "Комсомольская", "Тверская", "Беляево"],
-    spb: ["Невский проспект", "Гостиный двор", "Петроградская", "Черная речка"],
-    nsk: ["Площадь Ленина", "Площадь Гарина-Михайловского"],
-    kazan: ["Кремлевская", "Козья слобода", "Авиастроительная"],
-    samara: ["Российская", "Московская", "Алабинская"],
-    nnov: ["Горьковская", "Канавинская", "Московская"],
-    ekb: ["Проспект Космонавтов", "Уралмаш", "Площадь 1905 года"]
-};
-
-// Элементы
-const citySelect = document.getElementById("city-select");
-const metroSelect = document.getElementById("metro-select");
-const confirmBtn = document.getElementById("confirm-btn");
-
-// При выборе города
-citySelect.addEventListener("change", () => {
-    const city = citySelect.value;
-
-    // Отключить станцию и кнопку
-    metroSelect.disabled = true;
-    confirmBtn.disabled = true;
-
-    if (!city) {
-        metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
-        return;
-    }
-
-    // Заполняем станции выбранного города
-    const stations = METRO[city];
-    metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
-
-    stations.forEach(st => {
-        metroSelect.innerHTML += `<option value="${st}">${st}</option>`;
-    });
-
-    metroSelect.disabled = false;
-});
-
-// При выборе метро
-metroSelect.addEventListener("change", () => {
-    if (metroSelect.value) {
-        confirmBtn.disabled = false;
-    } else {
-        confirmBtn.disabled = true;
-    }
-});
-
-// Переход на следующий экран
-confirmBtn.addEventListener("click", () => {
-    document.getElementById("welcome").classList.remove("active");
-    document.getElementById("choose").classList.add("active");
-});
 </script>
 
 </body>
