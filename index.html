@@ -35,7 +35,7 @@ body {
     height: 200px;
     overflow: hidden;
     border-radius: 14px;
-    background: #111;
+    background: #222;
   }
 
   .snow-item img {
@@ -48,16 +48,10 @@ body {
   .snow-canvas {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
   }
-
-  @media (max-width: 600px) {
-    .snow-item {
-      width: 90vw;
-      height: 60vw;
-    }
-  }
-
     .sbp-link {
     color: #17212b;       /* цвет текста */
     font-size: 12px;      /* размер */
@@ -1049,10 +1043,15 @@ feed.addEventListener("scroll", () => {
 });
 
 
+
+
+
+    
+
 const BLOCK = document.getElementById("snowBlock");
 
-// 3 рандомных фото с picsum (городские теги сами по себе в рандоме часто попадаются)
-function createSnowItem(index) {  
+// Рандомные картинки
+function createSnowItem(index) {
   const url = "https://picsum.photos/seed/" + (Date.now() + index) + "/800/600";
 
   const item = document.createElement("div");
@@ -1067,62 +1066,70 @@ function createSnowItem(index) {
   item.appendChild(img);
   item.appendChild(canvas);
 
-  img.onload = () => startSnow(canvas);
+  // Запускаем снег после рендера DOM
+  setTimeout(() => startSnow(canvas), 50);
+
   return item;
-}
-
-function startSnow(canvas) {
-  const ctx = canvas.getContext("2d");
-  const DPR = window.devicePixelRatio || 1;
-
-  function resize() {
-    const r = canvas.getBoundingClientRect();
-    canvas.width = r.width * DPR;
-    canvas.height = r.height * DPR;
-  }
-
-  resize();
-  window.addEventListener("resize", resize);
-
-  const W = () => canvas.width;
-  const H = () => canvas.height;
-
-  const particles = Array.from({ length: 40 }, () => ({
-    x: Math.random() * W(),
-    y: Math.random() * H(),
-    r: Math.random() * 2 + 1,
-    vy: Math.random() * 1.5 + 0.5,
-    vx: Math.random() * 0.5 - 0.25,
-  }));
-
-  function loop() {
-    ctx.clearRect(0, 0, W(), H());
-    ctx.fillStyle = "white";
-
-    for (let p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.y > H()) p.y = -10;
-      if (p.x < -10) p.x = W() + 10;
-      if (p.x > W() + 10) p.x = -10;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    requestAnimationFrame(loop);
-  }
-
-  loop();
 }
 
 for (let i = 0; i < 3; i++) {
   BLOCK.appendChild(createSnowItem(i));
 }
 
+// ======== СНЕГ (рабочий и простой) ========
+function startSnow(canvas) {
+  const ctx = canvas.getContext("2d");
+  const DPR = window.devicePixelRatio || 1;
+
+  function resizeCanvas() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    canvas.width = w * DPR;
+    canvas.height = h * DPR;
+  }
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  // создаём снежинки
+  const flakes = Array.from({ length: 60 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 1,
+    vy: Math.random() * 1.5 + 0.7,
+    vx: Math.random() * 0.6 - 0.3
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+
+    for (let f of flakes) {
+      f.x += f.vx;
+      f.y += f.vy;
+
+      if (f.y > canvas.height) f.y = -5;
+      if (f.x > canvas.width) f.x = -5;
+      if (f.x < -5) f.x = canvas.width + 5;
+
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+}
 
 
+
+
+
+
+
+    
 
     
     function nextSlide() {
