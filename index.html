@@ -34,11 +34,11 @@ body {
 
 .blocked-photo {
     position: relative;
-    width: 28vw;
-    max-width: 120px;
-    height: 28vw;
-    max-height: 120px;
-    border-radius: 8px;
+    width: 20vw;
+    max-width: 100px;
+    height: 20vw;
+    max-height: 100px;
+    border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.2s;
@@ -1108,7 +1108,7 @@ feed.addEventListener("scroll", () => {
         
         // Создаём изображение
         const img = document.createElement('img');
-        img.src = `https://picsum.photos/300/300?random=${photoId}&t=${Date.now()}`;
+        img.src = `https://picsum.photos/200/200?random=${photoId}&t=${Date.now()}`;
         img.alt = 'Заблокированное фото';
         
         // Проверяем загрузку
@@ -1127,7 +1127,7 @@ feed.addEventListener("scroll", () => {
         noiseOverlay.className = 'noise-overlay';
         
         // Создаём 50 бегающих пикселей
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 100; i++) {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
             
