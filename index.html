@@ -956,57 +956,7 @@ feed.addEventListener("scroll", () => {
 
 
 
-const citySelect = document.getElementById("city-select");
-const metroSelect = document.getElementById("metro-select");
-const confirmBtn = document.getElementById("confirm-btn");
 
-// Список метро для городов
-const metroData = {
-    moscow: ["Кропоткинская", "Бауманская", "Таганская"],
-    spb: ["Невский проспект", "Горьковская", "Площадь Восстания"],
-    nsk: ["Площадь Ленина", "Октябрьская"],
-    kazan: ["Кремлёвская", "Площадь Тукая"],
-    samara: ["Спортивная", "Победа"],
-    nnov: ["Горьковская", "Стрелка"],
-    ekb: ["Площадь 1905 года", "Динамо"]
-};
-
-// При выборе города — подгружаем станции метро
-citySelect.addEventListener("change", () => {
-    let city = citySelect.value;
-
-    // Стираем предыдущие станции
-    metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
-
-    if (city === "") {
-        metroSelect.disabled = true;
-        confirmBtn.disabled = true;
-        return;
-    }
-
-    // Подгружаем станции метро
-    metroData[city].forEach(station => {
-        let opt = document.createElement("option");
-        opt.value = station;
-        opt.textContent = station;
-        metroSelect.appendChild(opt);
-    });
-
-    metroSelect.disabled = false;
-    confirmBtn.disabled = true;
-});
-
-// Разблокируем кнопку "Подтвердить"
-metroSelect.addEventListener("change", () => {
-    confirmBtn.disabled = metroSelect.value === "";
-});
-
-// Переход на страницу товаров
-confirmBtn.addEventListener("click", () => {
-    document.getElementById("welcome").style.display = "none";
-    document.getElementById("products").style.display = "block";
-});
- 
 
 
     
@@ -1028,6 +978,66 @@ confirmBtn.addEventListener("click", () => {
 
 }); // КОНЕЦ DOMContentLoaded
 
+
+
+
+    
+</script>
+<script>
+// Список станций по городам
+const METRO = {
+    moscow: ["Охотный ряд", "Китай-город", "Комсомольская", "Тверская", "Беляево"],
+    spb: ["Невский проспект", "Гостиный двор", "Петроградская", "Черная речка"],
+    nsk: ["Площадь Ленина", "Площадь Гарина-Михайловского"],
+    kazan: ["Кремлевская", "Козья слобода", "Авиастроительная"],
+    samara: ["Российская", "Московская", "Алабинская"],
+    nnov: ["Горьковская", "Канавинская", "Московская"],
+    ekb: ["Проспект Космонавтов", "Уралмаш", "Площадь 1905 года"]
+};
+
+// Элементы
+const citySelect = document.getElementById("city-select");
+const metroSelect = document.getElementById("metro-select");
+const confirmBtn = document.getElementById("confirm-btn");
+
+// При выборе города
+citySelect.addEventListener("change", () => {
+    const city = citySelect.value;
+
+    // Отключить станцию и кнопку
+    metroSelect.disabled = true;
+    confirmBtn.disabled = true;
+
+    if (!city) {
+        metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
+        return;
+    }
+
+    // Заполняем станции выбранного города
+    const stations = METRO[city];
+    metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
+
+    stations.forEach(st => {
+        metroSelect.innerHTML += `<option value="${st}">${st}</option>`;
+    });
+
+    metroSelect.disabled = false;
+});
+
+// При выборе метро
+metroSelect.addEventListener("change", () => {
+    if (metroSelect.value) {
+        confirmBtn.disabled = false;
+    } else {
+        confirmBtn.disabled = true;
+    }
+});
+
+// Переход на следующий экран
+confirmBtn.addEventListener("click", () => {
+    document.getElementById("welcome").classList.remove("active");
+    document.getElementById("choose").classList.add("active");
+});
 </script>
 
 </body>
