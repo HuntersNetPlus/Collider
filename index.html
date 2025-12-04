@@ -24,6 +24,57 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+.blocked-photo {
+    position: relative;
+    width: 28vw;
+    max-width: 120px;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.blocked-photo:hover {
+    transform: scale(1.05);
+}
+
+.blocked-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(15px);
+}
+
+.blocked-photo .noise-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.blocked-photo .pixel {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+}
+
+
+    
+
+
     .sbp-link {
     color: #17212b;       /* цвет текста */
     font-size: 12px;      /* размер */
@@ -551,7 +602,24 @@ body {
 <!-- SCREEN 3 -->
 <div id="payment" class="screen">
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
+    
     <img src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-7e232c37d2a67cfd.webp?raw=true" style="width:300px; position: relative; top: 15px; z-index: 2;">
+
+
+    <div id="blocked-photos-container" style="
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 90vw;
+">
+    <div class="blocked-photo" data-id="1"></div>
+    <div class="blocked-photo" data-id="2"></div>
+    <div class="blocked-photo" data-id="3"></div>
+</div>
+    
+    
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;">
 
          
@@ -1011,6 +1079,98 @@ feed.addEventListener("scroll", () => {
 
 
 
+
+
+
+
+
+
+
+// Добавьте этот скрипт в ваш существующий блок <script> или в конец документа
+
+document.addEventListener('DOMContentLoaded', function() {
+    const blockedPhotos = document.querySelectorAll('.blocked-photo');
+    
+    blockedPhotos.forEach((photoDiv, idx) => {
+        const photoId = photoDiv.dataset.id;
+        
+        // Создаём изображение
+        const img = document.createElement('img');
+        img.src = `https://picsum.photos/300/300?random=${photoId}`;
+        img.alt = 'Заблокированное фото';
+        
+        // Создаём overlay для пикселей
+        const noiseOverlay = document.createElement('div');
+        noiseOverlay.className = 'noise-overlay';
+        
+        // Создаём 50 бегающих пикселей
+        for (let i = 0; i < 50; i++) {
+            const pixel = document.createElement('div');
+            pixel.className = 'pixel';
+            
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            const duration = 2 + Math.random() * 3;
+            const delay = Math.random() * 2;
+            
+            pixel.style.left = startX + '%';
+            pixel.style.top = startY + '%';
+            pixel.style.animation = `movePixel${idx}_${i} ${duration}s ${delay}s infinite`;
+            
+            // Создаём уникальную анимацию для каждого пикселя
+            const endX = Math.random() * 100;
+            const endY = Math.random() * 100;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes movePixel${idx}_${i} {
+                    0%, 100% { 
+                        left: ${startX}%; 
+                        top: ${startY}%; 
+                        opacity: 0.85;
+                    }
+                    50% { 
+                        left: ${endX}%; 
+                        top: ${endY}%; 
+                        opacity: 0.3;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            noiseOverlay.appendChild(pixel);
+        }
+        
+        photoDiv.appendChild(img);
+        photoDiv.appendChild(noiseOverlay);
+        
+        // Обработчик клика - показываем тултип с ошибкой
+        photoDiv.addEventListener('click', function() {
+            showGlassToast(`
+                <div style="text-align:center;">
+                    <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/Cross%20Mark.webp?raw=true" style="width:70px;"><br>
+                    <div><b>Сначала оплатите заказ</b></div>
+                </div>
+            `, 2500);
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     function nextSlide() {
         if (total === 0) return;
         
