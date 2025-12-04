@@ -647,7 +647,12 @@ body {
 <!-- SCREEN 3 -->
 <div id="payment" class="screen">
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
+    
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> <p id="summary-text">Данные заказа: </p> #<span id="orderNum"></span>    </div>
+
+<p id="summary-text">Вы выбрали карту: </p>
+
+    
     <div id="blocked-photos-container" style="
     display: flex;
     gap: 10px;
@@ -794,6 +799,21 @@ document.addEventListener('DOMContentLoaded', () => {
             price,
             discount
         };
+
+
+
+
+function selectOption(name, price) {
+    selected = { name, price, discount: price * 0.5 };
+
+    // Проверяем, существует ли элемент
+    const summary = document.getElementById("summary-text");
+    if (summary) {
+        summary.innerText = `Вы выбрали карту: ${selected.name}`;
+    }
+
+
+        
         
         document.getElementById('pay_title').innerText = name;
         document.getElementById('price_usdt').innerText = price;
@@ -803,6 +823,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateConversion();
         }, 250);
     }
+
+
+
+ 
+
+    
 
 async function updateConversion() {
     const cur = document.getElementById("currency").value;
