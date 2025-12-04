@@ -22,7 +22,7 @@ body {
           display: none;
     }
 
-  .snow-block {
+ .snow-block {
     display: flex;
     gap: 15px;
     justify-content: center;
@@ -35,6 +35,7 @@ body {
     height: 200px;
     overflow: hidden;
     border-radius: 14px;
+    background: #111;
   }
 
   .snow-item img {
@@ -586,7 +587,7 @@ body {
     <b id="pay_title">Выпуск Быдло Bot Карты</b>
     
    
-    <div class="snow-block" id="snowBlock"></div>
+ <div class="snow-block" id="snowBlock"></div>
 
 
     
@@ -1048,13 +1049,11 @@ feed.addEventListener("scroll", () => {
 });
 
 
-// 3 фото с городами (Unsplash) — рандомные, каждый раз новые
-const CITY_TAGS = ["city", "urban", "street", "buildings", "road", "downtown"];
 const BLOCK = document.getElementById("snowBlock");
 
-function createSnowItem(index) {
-  const tag = CITY_TAGS[Math.floor(Math.random() * CITY_TAGS.length)];
-  const url = `https://source.unsplash.com/1200x800/?${tag}&sig=${Date.now() + index}`;
+// 3 рандомных фото с picsum (городские теги сами по себе в рандоме часто попадаются)
+function createSnowItem(index) {  
+  const url = "https://picsum.photos/seed/" + (Date.now() + index) + "/800/600";
 
   const item = document.createElement("div");
   item.className = "snow-item";
@@ -1069,7 +1068,6 @@ function createSnowItem(index) {
   item.appendChild(canvas);
 
   img.onload = () => startSnow(canvas);
-
   return item;
 }
 
@@ -1113,17 +1111,16 @@ function startSnow(canvas) {
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();
     }
-
     requestAnimationFrame(loop);
   }
 
   loop();
 }
 
-// создать 3 картинки
 for (let i = 0; i < 3; i++) {
   BLOCK.appendChild(createSnowItem(i));
 }
+
 
 
 
