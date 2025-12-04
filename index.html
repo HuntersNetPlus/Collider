@@ -25,51 +25,84 @@ body {
 
 
 
+   .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
 
+        .image-wrapper {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-.spoiler-gallery {
-  display: flex;
-  gap: 12px;
-}
+        .image-wrapper:hover {
+            transform: scale(1.02);
+        }
 
-.spoiler-item {
-  width: 120px;
-  height: 180px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-  background-size: cover;
-  background-position: center;
-  filter: blur(6px);
-}
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(20px);
+        }
 
-/* Белые пиксели поверх */
-.spoiler-noise {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent 0,
-    transparent 1px,
-    white 1px,
-    white 2px
-  );
-  mix-blend-mode: screen;
-  opacity: 0.6;
-  animation: noiseMove 0.15s infinite steps(2);
-  filter: blur(1px);
-}
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
 
-/* «Бегание» пикселей */
-@keyframes noiseMove {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(-2px, 1px); }
-  100% { transform: translate(1px, -2px); }
-}
+        .pixel {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+        }
 
+        .tooltip {
+            position: fixed;
+            background: #ff3b30;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+        }
 
+        .tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #ff3b30;
+        }
 
 
 
@@ -609,8 +642,8 @@ body {
     <b id="pay_title">Выпуск Быдло Bot Карты</b>
     
    
-<div class="spoiler-gallery"></div>
-
+<div class="container" id="container"></div>
+    <div class="tooltip" id="tooltip">Сначала оплатите заказ</div>
 
     
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;">
@@ -1074,31 +1107,77 @@ feed.addEventListener("scroll", () => {
 
 
 
-    
- function randomPicsumImage() {
-  // Размер фото можно менять
-  const width = 400;
-  const height = 600;
+      const container = document.getElementById('container');
+        const tooltip = document.getElementById('tooltip');
+        const imageIds = [1, 15, 28];
 
-  // генерируем картинку с RANDOM seed
-  return `https://picsum.photos/seed/${Math.random()}/${width}/${height}`;
-}
+        // Создаём 3 изображения
+        imageIds.forEach(id => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-wrapper';
 
-const container = document.querySelector(".spoiler-gallery");
+            const img = document.createElement('img');
+            img.src = `https://picsum.photos/400/400?random=${id}`;
+            img.alt = 'Заблокированное фото';
 
-for (let i = 0; i < 3; i++) {
-  const item = document.createElement("div");
-  item.className = "spoiler-item";
-  item.style.backgroundImage = `url(${randomPicsumImage()})`;
+            const noiseOverlay = document.createElement('div');
+            noiseOverlay.className = 'noise-overlay';
 
-  const noise = document.createElement("div");
-  noise.className = "spoiler-noise";
+            // Создаём бегающие пиксели
+            for (let i = 0; i < 80; i++) {
+                const pixel = document.createElement('div');
+                pixel.className = 'pixel';
+                
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 100;
+                const duration = 2 + Math.random() * 3;
+                const delay = Math.random() * 2;
+                
+                pixel.style.left = startX + '%';
+                pixel.style.top = startY + '%';
+                pixel.style.animation = `movePixel${i} ${duration}s ${delay}s infinite`;
+                
+                // Создаём уникальную анимацию для каждого пикселя
+                const endX = Math.random() * 100;
+                const endY = Math.random() * 100;
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes movePixel${i} {
+                        0%, 100% { 
+                            left: ${startX}%; 
+                            top: ${startY}%; 
+                            opacity: 0.8;
+                        }
+                        50% { 
+                            left: ${endX}%; 
+                            top: ${endY}%; 
+                            opacity: 0.3;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                noiseOverlay.appendChild(pixel);
+            }
 
-  item.appendChild(noise);
-  container.appendChild(item);
-}
+            wrapper.appendChild(img);
+            wrapper.appendChild(noiseOverlay);
+            container.appendChild(wrapper);
 
-
+            // Обработчик клика для показа тултипа
+            wrapper.addEventListener('click', (e) => {
+                const rect = wrapper.getBoundingClientRect();
+                tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+                tooltip.style.top = rect.top - 60 + 'px';
+                
+                tooltip.classList.add('show');
+                
+                setTimeout(() => {
+                    tooltip.classList.remove('show');
+                }, 2500);
+            });
+        });
 
 
 
