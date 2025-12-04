@@ -35,7 +35,7 @@ body {
     height: 200px;
     overflow: hidden;
     border-radius: 14px;
-    background: #222;
+    background: #111;
   }
 
   .snow-item img {
@@ -45,13 +45,41 @@ body {
     filter: blur(12px) brightness(0.9);
   }
 
-  .snow-canvas {
+  /* --- СНЕГ (CSS) --- */
+  .snow-item::before,
+  .snow-item::after {
+    content: "";
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Ccircle cx='3' cy='3' r='3' fill='white'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 4px 4px;
+    opacity: 0.6;
+    animation: snowfall 12s linear infinite;
     pointer-events: none;
   }
+
+  .snow-item::after {
+    background-size: 3px 3px;
+    opacity: 0.35;
+    animation-duration: 18s;
+    animation-direction: reverse;
+  }
+
+  @keyframes snowfall {
+    from { transform: translateY(-100%); }
+    to   { transform: translateY(100%); }
+  }
+
+  @media (max-width: 600px) {
+    .snow-item {
+      width: 90vw;
+      height: 60vw;
+    }
+  }
+
+
+    
     .sbp-link {
     color: #17212b;       /* цвет текста */
     font-size: 12px;      /* размер */
@@ -1048,79 +1076,24 @@ feed.addEventListener("scroll", () => {
 
     
 
-const BLOCK = document.getElementById("snowBlock");
+// ПРОСТО создаём 3 картинки. Никакого canvas.
+const block = document.getElementById("snowBlock");
 
-// Рандомные картинки
-function createSnowItem(index) {
-  const url = "https://picsum.photos/seed/" + (Date.now() + index) + "/800/600";
+function createItem(i) {
+  const url = "https://picsum.photos/seed/" + (Date.now() + i) + "/800/600";
 
-  const item = document.createElement("div");
-  item.className = "snow-item";
+  const div = document.createElement("div");
+  div.className = "snow-item";
 
   const img = document.createElement("img");
   img.src = url;
 
-  const canvas = document.createElement("canvas");
-  canvas.className = "snow-canvas";
-
-  item.appendChild(img);
-  item.appendChild(canvas);
-
-  // Запускаем снег после рендера DOM
-  setTimeout(() => startSnow(canvas), 50);
-
-  return item;
+  div.appendChild(img);
+  return div;
 }
 
 for (let i = 0; i < 3; i++) {
-  BLOCK.appendChild(createSnowItem(i));
-}
-
-// ======== СНЕГ (рабочий и простой) ========
-function startSnow(canvas) {
-  const ctx = canvas.getContext("2d");
-  const DPR = window.devicePixelRatio || 1;
-
-  function resizeCanvas() {
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight;
-    canvas.width = w * DPR;
-    canvas.height = h * DPR;
-  }
-
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-
-  // создаём снежинки
-  const flakes = Array.from({ length: 60 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2 + 1,
-    vy: Math.random() * 1.5 + 0.7,
-    vx: Math.random() * 0.6 - 0.3
-  }));
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-
-    for (let f of flakes) {
-      f.x += f.vx;
-      f.y += f.vy;
-
-      if (f.y > canvas.height) f.y = -5;
-      if (f.x > canvas.width) f.x = -5;
-      if (f.x < -5) f.x = canvas.width + 5;
-
-      ctx.beginPath();
-      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    requestAnimationFrame(draw);
-  }
-
-  draw();
+  block.appendChild(createItem(i));
 }
 
 
