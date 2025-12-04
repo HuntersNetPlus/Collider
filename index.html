@@ -23,6 +23,20 @@ body {
     }
 
 
+.welcome-screen {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+select, button {
+    padding: 10px;
+    font-size: 16px;
+}
+button:disabled {
+    opacity: 0.4;
+}
 
     .sbp-link {
     color: #17212b;       /* цвет текста */
@@ -205,15 +219,6 @@ body {
     font-size: 16px;
 }
 
-#welcome {
-    position: relative; /* чтобы z-index работал */
-    z-index: 1000;      /* достаточно большое значение, чтобы перекрыть другие элементы */
-}
-#geo-btn {
-    position: relative; /* на всякий случай */
-    z-index: 1001;      /* чтобы кнопка точно была выше фона/слоёв */
-}
-
 
 .tooltiptext {
     visibility: hidden;
@@ -344,24 +349,31 @@ body {
 
 <div id="loader"><img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Hourglass%20Not%20Done.webp?raw=true" style="width:200px;"></div>
 
+<!-- SCREEN 1 -->
+<div id="welcome" class="welcome-screen">
+    <h2>Выберите город и метро</h2>
 
+    <label>Город:</label>
+    <select id="city-select">
+        <option value="">— выберите город —</option>
+        <option value="moscow">Москва</option>
+        <option value="spb">Санкт-Петербург</option>
+        <option value="nsk">Новосибирск</option>
+        <option value="kazan">Казань</option>
+        <option value="samara">Самара</option>
+        <option value="nnov">Нижний Новгород</option>
+        <option value="ekb">Екатеринбург</option>
+    </select>
 
+    <label>Метро:</label>
+    <select id="metro-select" disabled>
+        <option value="">— выберите метро —</option>
+    </select>
 
-<div id="welcome" class="active">
-    <h2>Добро пожаловать!</h2>
-    <button id="geo-btn">Определить местоположение</button>
+    <button id="confirm-btn" disabled>Подтвердить</button>
 </div>
 
-
-
-
-
-
-
-
-
-
-    
+ 
 
 <!-- SCREEN 2 -->
 <div id="choose" class="screen">
@@ -940,71 +952,61 @@ feed.addEventListener("scroll", () => {
 
 
 
+<script>
+const citySelect = document.getElementById("city-select");
+const metroSelect = document.getElementById("metro-select");
+const confirmBtn = document.getElementById("confirm-btn");
 
+// Список метро для городов
+const metroData = {
+    moscow: ["Кропоткинская", "Бауманская", "Таганская"],
+    spb: ["Невский проспект", "Горьковская", "Площадь Восстания"],
+    nsk: ["Площадь Ленина", "Октябрьская"],
+    kazan: ["Кремлёвская", "Площадь Тукая"],
+    samara: ["Спортивная", "Победа"],
+    nnov: ["Горьковская", "Стрелка"],
+    ekb: ["Площадь 1905 года", "Динамо"]
+};
 
-document.addEventListener('DOMContentLoaded', () => {
+// При выборе города — подгружаем станции метро
+citySelect.addEventListener("change", () => {
+    let city = citySelect.value;
 
-    const validCities = ["Москва", "Питер", "Новосиб", "Казань", "Самара", "Нижний новгород", "Екатеринбург"];
-    const geoBtn = document.getElementById("geo-btn");
+    // Стираем предыдущие станции
+    metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
 
-    const screens = {
-        welcome: document.getElementById('welcome'),
-        choose: document.getElementById('choose')
-    };
-    const loader = document.getElementById('loader');
-
-    // Тултип
-    let toast = null;
-    function showGlassToast(message, duration = 2000) {
-        if (toast) toast.remove();
-        toast = document.createElement("div");
-        toast.className = "tooltip-glass";
-        toast.innerText = message;
-        document.body.appendChild(toast);
-        setTimeout(() => { if(toast) toast.remove(); toast=null; }, duration);
+    if (city === "") {
+        metroSelect.disabled = true;
+        confirmBtn.disabled = true;
+        return;
     }
 
-    // Открыть экран
-    function openScreen(id) {
-        Object.values(screens).forEach(s => s.classList.remove('active'));
-        loader.style.display = 'flex';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            screens[id].classList.add('active');
-        }, 900);
-    }
-
-    // Автоопределение локации
-    geoBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) {
-            showGlassToast("Геолокация не поддерживается", 2000);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(pos => {
-            const { latitude, longitude } = pos.coords;
-
-            // В реальном проекте здесь нужно API геокодирования, пока для примера рандомный город
-            const detectedCity = validCities[Math.floor(Math.random() * validCities.length)];
-
-            if (!validCities.includes(detectedCity)) {
-                showGlassToast("В вашем городе ничего нет", 2000);
-                return;
-            }
-
-            openScreen('choose');
-
-        }, err => {
-            showGlassToast("Не удалось определить местоположение", 2000);
-        });
+    // Подгружаем станции метро
+    metroData[city].forEach(station => {
+        let opt = document.createElement("option");
+        opt.value = station;
+        opt.textContent = station;
+        metroSelect.appendChild(opt);
     });
 
+    metroSelect.disabled = false;
+    confirmBtn.disabled = true;
 });
 
+// Разблокируем кнопку "Подтвердить"
+metroSelect.addEventListener("change", () => {
+    confirmBtn.disabled = metroSelect.value === "";
+});
+
+// Переход на страницу товаров
+confirmBtn.addEventListener("click", () => {
+    document.getElementById("welcome").style.display = "none";
+    document.getElementById("products").style.display = "block";
+});
+ 
 
 
     
-
 
     function nextSlide() {
         if (total === 0) return;
