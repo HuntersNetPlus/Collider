@@ -647,7 +647,7 @@ body {
 <!-- SCREEN 3 -->
 <div id="payment" class="screen">
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
-    <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> Данные заказа #<span id="orderNum"></span> [${selected.name}]</div>
+    <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> <p id="summary-text">Данные заказа: </p> #<span id="orderNum"></span>    </div>
     <div id="blocked-photos-container" style="
     display: flex;
     gap: 10px;
@@ -1306,7 +1306,8 @@ feed.addEventListener("scroll", () => {
 })();
 
 
-
+const summary = document.getElementById("summary-text");
+summary.innerText ="Данные заказа: " + selected.name;
 
 
 
