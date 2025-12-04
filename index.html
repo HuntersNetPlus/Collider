@@ -22,7 +22,40 @@ body {
           display: none;
     }
 
+  .snow-block {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+  }
 
+  .snow-item {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+
+  .snow-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(12px) brightness(0.9);
+  }
+
+  .snow-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .snow-item {
+      width: 90vw;
+      height: 60vw;
+    }
+  }
 
     .sbp-link {
     color: #17212b;       /* цвет текста */
@@ -550,8 +583,13 @@ body {
 </div>
 <!-- SCREEN 3 -->
 <div id="payment" class="screen">
-    <b id="pay_title">Выпуск Crypto Bot Карты</b>
-    <img src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-7e232c37d2a67cfd.webp?raw=true" style="width:300px; position: relative; top: 15px; z-index: 2;">
+    <b id="pay_title">Выпуск Быдло Bot Карты</b>
+    
+   
+    <div class="snow-block" id="snowBlock"></div>
+
+
+    
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;">
 
          
@@ -1010,7 +1048,86 @@ feed.addEventListener("scroll", () => {
 });
 
 
+// 3 фото с городами (Unsplash) — рандомные, каждый раз новые
+const CITY_TAGS = ["city", "urban", "street", "buildings", "road", "downtown"];
+const BLOCK = document.getElementById("snowBlock");
 
+function createSnowItem(index) {
+  const tag = CITY_TAGS[Math.floor(Math.random() * CITY_TAGS.length)];
+  const url = `https://source.unsplash.com/1200x800/?${tag}&sig=${Date.now() + index}`;
+
+  const item = document.createElement("div");
+  item.className = "snow-item";
+
+  const img = document.createElement("img");
+  img.src = url;
+
+  const canvas = document.createElement("canvas");
+  canvas.className = "snow-canvas";
+
+  item.appendChild(img);
+  item.appendChild(canvas);
+
+  img.onload = () => startSnow(canvas);
+
+  return item;
+}
+
+function startSnow(canvas) {
+  const ctx = canvas.getContext("2d");
+  const DPR = window.devicePixelRatio || 1;
+
+  function resize() {
+    const r = canvas.getBoundingClientRect();
+    canvas.width = r.width * DPR;
+    canvas.height = r.height * DPR;
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+
+  const W = () => canvas.width;
+  const H = () => canvas.height;
+
+  const particles = Array.from({ length: 40 }, () => ({
+    x: Math.random() * W(),
+    y: Math.random() * H(),
+    r: Math.random() * 2 + 1,
+    vy: Math.random() * 1.5 + 0.5,
+    vx: Math.random() * 0.5 - 0.25,
+  }));
+
+  function loop() {
+    ctx.clearRect(0, 0, W(), H());
+    ctx.fillStyle = "white";
+
+    for (let p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.y > H()) p.y = -10;
+      if (p.x < -10) p.x = W() + 10;
+      if (p.x > W() + 10) p.x = -10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  loop();
+}
+
+// создать 3 картинки
+for (let i = 0; i < 3; i++) {
+  BLOCK.appendChild(createSnowItem(i));
+}
+
+
+
+    
     function nextSlide() {
         if (total === 0) return;
         
