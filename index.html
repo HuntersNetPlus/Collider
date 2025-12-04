@@ -36,12 +36,14 @@ body {
     position: relative;
     width: 28vw;
     max-width: 120px;
-    aspect-ratio: 1;
+    height: 28vw;
+    max-height: 120px;
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    z-index: 99999999999;
     transition: transform 0.2s;
+    background: #253648;
+    flex-shrink: 0;
 }
 
 .blocked-photo:hover {
@@ -49,10 +51,14 @@ body {
 }
 
 .blocked-photo img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     filter: blur(15px);
+    display: block;
 }
 
 .blocked-photo .noise-overlay {
@@ -62,6 +68,7 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: 2;
 }
 
 .blocked-photo .pixel {
@@ -71,7 +78,6 @@ body {
     background: rgba(255, 255, 255, 0.85);
     border-radius: 50%;
 }
-
 
     
 
@@ -614,10 +620,11 @@ body {
     align-items: center;
     margin: 20px auto;
     max-width: 90vw;
+    min-height: 120px;
 ">
-    <div class="blocked-photo" data-id="1"></div>
-    <div class="blocked-photo" data-id="2"></div>
-    <div class="blocked-photo" data-id="3"></div>
+    <div class="blocked-photo" data-id="42"></div>
+    <div class="blocked-photo" data-id="67"></div>
+    <div class="blocked-photo" data-id="89"></div>
 </div>
     
     
@@ -1087,18 +1094,33 @@ feed.addEventListener("scroll", () => {
 
 
 
-// Добавьте этот скрипт в ваш существующий блок <script> или в конец документа
-
-document.addEventListener('DOMContentLoaded', function() {
+(function initBlockedPhotos() {
     const blockedPhotos = document.querySelectorAll('.blocked-photo');
+    
+    if (blockedPhotos.length === 0) {
+        console.warn('Blocked photos not found, retrying...');
+        setTimeout(initBlockedPhotos, 100);
+        return;
+    }
     
     blockedPhotos.forEach((photoDiv, idx) => {
         const photoId = photoDiv.dataset.id;
         
         // Создаём изображение
         const img = document.createElement('img');
-        img.src = `https://picsum.photos/300/300?random=${photoId}`;
+        img.src = `https://picsum.photos/300/300?random=${photoId}&t=${Date.now()}`;
         img.alt = 'Заблокированное фото';
+        
+        // Проверяем загрузку
+        img.onload = function() {
+            console.log(`Photo ${photoId} loaded successfully`);
+        };
+        
+        img.onerror = function() {
+            console.error(`Failed to load photo ${photoId}`);
+            // Запасной вариант
+            img.src = `https://via.placeholder.com/300/333333/ffffff?text=Photo+${photoId}`;
+        };
         
         // Создаём overlay для пикселей
         const noiseOverlay = document.createElement('div');
@@ -1146,16 +1168,25 @@ document.addEventListener('DOMContentLoaded', function() {
         photoDiv.appendChild(noiseOverlay);
         
         // Обработчик клика - показываем тултип с ошибкой
-        photoDiv.addEventListener('click', function() {
-            showGlassToast(`
-                <div style="text-align:center;">
-                    <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/Cross%20Mark.webp?raw=true" style="width:70px;"><br>
-                    <div><b>Сначала оплатите заказ</b></div>
-                </div>
-            `, 2500);
+        photoDiv.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Проверяем наличие функции showGlassToast
+            if (typeof showGlassToast === 'function') {
+                showGlassToast(`
+                    <div style="text-align:center;">
+                        <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/Cross%20Mark.webp?raw=true" style="width:70px;"><br>
+                        <div><b>Сначала оплатите заказ</b></div>
+                    </div>
+                `, 2500);
+            } else {
+                alert('Сначала оплатите заказ');
+            }
         });
     });
-});
+    
+    console.log('Blocked photos initialized:', blockedPhotos.length);
+})();
 
 
 
