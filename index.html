@@ -24,95 +24,6 @@ body {
 
 
 
-
-   .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            max-width: 65vw;
-            width: 65vw;
-        }
-
-        .image-wrapper {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .image-wrapper:hover {
-            transform: scale(1.02);
-        }
-
-        .image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: blur(20px);
-        }
-
-        .noise-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .pixel {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-        }
-
-        .tooltip {
-            position: fixed;
-            background: #ff3b30;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            pointer-events: none;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s, transform 0.3s;
-            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
-        }
-
-        .tooltip.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .tooltip::before {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid #ff3b30;
-        }
-
-
-
-
-
-
-
-
-    
-    
     .sbp-link {
     color: #17212b;       /* цвет текста */
     font-size: 12px;      /* размер */
@@ -639,13 +550,8 @@ body {
 </div>
 <!-- SCREEN 3 -->
 <div id="payment" class="screen">
-    <b id="pay_title">Выпуск Быдло Bot Карты</b>
-    
-   
-<div class="container" id="container"></div>
-    <div class="tooltip" id="tooltip">Сначала оплатите заказ</div>
-
-    
+    <b id="pay_title">Выпуск Crypto Bot Карты</b>
+    <img src="https://github.com/HuntersNetPlus/MaxSwap/blob/main/ezgif-7e232c37d2a67cfd.webp?raw=true" style="width:300px; position: relative; top: 15px; z-index: 2;">
     <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;">
 
          
@@ -1105,86 +1011,6 @@ feed.addEventListener("scroll", () => {
 
 
 
-
-
-      const container = document.getElementById('container');
-        const tooltip = document.getElementById('tooltip');
-        const imageIds = [1, 15, 28];
-
-        // Создаём 3 изображения
-        imageIds.forEach(id => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'image-wrapper';
-
-            const img = document.createElement('img');
-            img.src = `https://picsum.photos/150/150?random=${id}`;
-            img.alt = 'Заблокированное фото';
-
-            const noiseOverlay = document.createElement('div');
-            noiseOverlay.className = 'noise-overlay';
-
-            // Создаём бегающие пиксели
-            for (let i = 0; i < 80; i++) {
-                const pixel = document.createElement('div');
-                pixel.className = 'pixel';
-                
-                const startX = Math.random() * 100;
-                const startY = Math.random() * 100;
-                const duration = 2 + Math.random() * 3;
-                const delay = Math.random() * 2;
-                
-                pixel.style.left = startX + '%';
-                pixel.style.top = startY + '%';
-                pixel.style.animation = `movePixel${i} ${duration}s ${delay}s infinite`;
-                
-                // Создаём уникальную анимацию для каждого пикселя
-                const endX = Math.random() * 100;
-                const endY = Math.random() * 100;
-                
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes movePixel${i} {
-                        0%, 100% { 
-                            left: ${startX}%; 
-                            top: ${startY}%; 
-                            opacity: 0.8;
-                        }
-                        50% { 
-                            left: ${endX}%; 
-                            top: ${endY}%; 
-                            opacity: 0.3;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                noiseOverlay.appendChild(pixel);
-            }
-
-            wrapper.appendChild(img);
-            wrapper.appendChild(noiseOverlay);
-            container.appendChild(wrapper);
-
-            // Обработчик клика для показа тултипа
-            wrapper.addEventListener('click', (e) => {
-                const rect = wrapper.getBoundingClientRect();
-                tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
-                tooltip.style.top = rect.top - 60 + 'px';
-                
-                tooltip.classList.add('show');
-                
-                setTimeout(() => {
-                    tooltip.classList.remove('show');
-                }, 2500);
-            });
-        });
-
-
-
-
-    
-
-    
     function nextSlide() {
         if (total === 0) return;
         
