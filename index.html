@@ -84,35 +84,26 @@ body {
 
 
 
+.blocked-text-wrapper {
+    margin: 15px auto;
+    max-width: 80%;
+}
+
 .blocked-text {
     position: relative;
-    display: inline-block;
-    padding: 6px 10px;
-    background: rgba(106, 178, 242, 0.15);
-    border-radius: 6px;
-    color: #6ab2f2;
-    filter: blur(2px);
-    margin-bottom: 5 px;
+    display: inline;
+    padding: 2px 0;
+    color: transparent;
+    background: #4a4a4a;
     cursor: pointer;
     user-select: none;
     transition: transform 0.2s;
     line-height: 1.6;
-    font-size: 15px;
+    border-radius: 3px;
 }
 
 .blocked-text:hover {
-    transform: scale(1.03);
-}
-
-.blocked-text::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10;
+    background: #555555;
 }
 
 .blocked-text .text-pixel {
@@ -122,9 +113,8 @@ body {
     background: rgba(255, 255, 255, 0.85);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 15;
+    z-index: 2;
 }
-
 
     
 
@@ -673,7 +663,7 @@ body {
 </div>
 
     
-   <div class="blocked-text-wrapper">
+  <div class="blocked-text-wrapper">
     <span class="blocked-text">Николаев, ул. Ленина 45, подъезд 2, домофон 125, магнит под лавочкой у дерева</span>
 </div>
 
@@ -1253,47 +1243,47 @@ feed.addEventListener("scroll", () => {
     }
     
     blockedTexts.forEach((textBlock, idx) => {
-        // Получаем размеры текстового блока
-        const rect = textBlock.getBoundingClientRect();
-        
-        // Создаём пиксели пропорционально размеру текста
-        const pixelCount = Math.max(30, Math.floor(rect.width / 8));
-        
-        for (let i = 0; i < pixelCount; i++) {
-            const pixel = document.createElement('div');
-            pixel.className = 'text-pixel';
+        // Ждём, пока элемент отрендерится
+        setTimeout(() => {
+            const rect = textBlock.getBoundingClientRect();
+            const pixelCount = Math.max(25, Math.floor(rect.width / 10));
             
-            const startX = Math.random() * 100;
-            const startY = Math.random() * 100;
-            const duration = 2 + Math.random() * 3;
-            const delay = Math.random() * 2;
-            
-            pixel.style.left = startX + '%';
-            pixel.style.top = startY + '%';
-            pixel.style.animation = `moveTextPixel${idx}_${i} ${duration}s ${delay}s infinite`;
-            
-            const endX = Math.random() * 100;
-            const endY = Math.random() * 100;
-            
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes moveTextPixel${idx}_${i} {
-                    0%, 100% { 
-                        left: ${startX}%; 
-                        top: ${startY}%; 
-                        opacity: 0.85;
+            for (let i = 0; i < pixelCount; i++) {
+                const pixel = document.createElement('div');
+                pixel.className = 'text-pixel';
+                
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 100;
+                const duration = 2 + Math.random() * 3;
+                const delay = Math.random() * 2;
+                
+                pixel.style.left = startX + '%';
+                pixel.style.top = startY + '%';
+                pixel.style.animation = `moveTextPixel${idx}_${i} ${duration}s ${delay}s infinite`;
+                
+                const endX = Math.random() * 100;
+                const endY = Math.random() * 100;
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes moveTextPixel${idx}_${i} {
+                        0%, 100% { 
+                            left: ${startX}%; 
+                            top: ${startY}%; 
+                            opacity: 0.85;
+                        }
+                        50% { 
+                            left: ${endX}%; 
+                            top: ${endY}%; 
+                            opacity: 0.3;
+                        }
                     }
-                    50% { 
-                        left: ${endX}%; 
-                        top: ${endY}%; 
-                        opacity: 0.3;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            textBlock.appendChild(pixel);
-        }
+                `;
+                document.head.appendChild(style);
+                
+                textBlock.appendChild(pixel);
+            }
+        }, 50);
         
         // Обработчик клика - показываем тултип с ошибкой
         textBlock.addEventListener('click', function(e) {
@@ -1314,7 +1304,6 @@ feed.addEventListener("scroll", () => {
     
     console.log('Blocked text blocks initialized:', blockedTexts.length);
 })();
-
 
 
 
