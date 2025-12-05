@@ -1443,7 +1443,7 @@ feed.addEventListener("scroll", () => {
   if (!feedEl) return; // если нет — ничего не делаем
 
   // Параметры
-  const SLOW_FACTOR = 0.2; // 0.28 — скролл в ~3.6 раза медленнее. Подбери под себя.
+  const SLOW_FACTOR = 0.18; // 0.28 — скролл в ~3.6 раза медленнее. Подбери под себя.
   const MAX_INERTIA_MS = 150; // время продолжения инерции (необязательно)
 
   let isPointerActive = false;
@@ -1629,9 +1629,9 @@ feed.addEventListener("scroll", () => {
                 showGlassToast(`
                     <div style="text-align:center;">
                         <img src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Symbols/Cross%20Mark.webp?raw=true" style="width:70px;"><br>
-                        <div><b>Заказ не оплачен.</b></div>
+                        <div><b>Сначала оплатите заказ.</b></div>
                     </div>
-                `, 2500);
+                `, 3500);
             } else {
                 alert('Сначала оплатите заказ');
             }
