@@ -1436,8 +1436,8 @@ feed.addEventListener("scroll", () => {
   if (!feedEl) return; // если нет — ничего не делаем
 
   // Параметры
-  const SLOW_FACTOR = 0.015; // 0.28 — скролл в ~3.6 раза медленнее. Подбери под себя.
-  const MAX_INERTIA_MS = 0; // время продолжения инерции (необязательно)
+  const SLOW_FACTOR = 0.2; // 0.28 — скролл в ~3.6 раза медленнее. Подбери под себя.
+  const MAX_INERTIA_MS = 150; // время продолжения инерции (необязательно)
 
   let isPointerActive = false;
   let activePointerId = null;
