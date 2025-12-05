@@ -1404,17 +1404,10 @@ feed.addEventListener("scroll", () => {
     }
 
     // Чтобы блок не разрастался бесконечно — перезапускаем, когда > 30 элементов
-   if (feed.children.length > 30) {
-
-    const currentScroll = feed.scrollTop;
-    const percent = currentScroll / feed.scrollHeight;
-
-    initFeed();
-
-    requestAnimationFrame(() => {
-        feed.scrollTop = feed.scrollHeight * percent;
-    });
-
+    if (feed.children.length > 30) {
+        initFeed();
+            }
+});
 
 
 
