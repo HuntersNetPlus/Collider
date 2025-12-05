@@ -1412,34 +1412,88 @@ feed.addEventListener("scroll", () => {
             }
 });
 
- // CUSTOM SCROLL
+// ------------ Медленный тач-скролл для feed ------------
+(function() {
+  if (typeof window === 'undefined') return;
+  const feedEl = document.getElementById("card-feed");
+  if (!feedEl) return; // если нет — ничего не делаем
 
-const feed = document.getElementById("card-feed");
+  // Параметры
+  const SLOW_FACTOR = 0.28; // 0.28 — скролл в ~3.6 раза медленнее. Подбери под себя.
+  const MAX_INERTIA_MS = 350; // время продолжения инерции (необязательно)
 
-let lastY = 0;
-let isTouching = false;
-const slowFactor = 0.3; // 0.3 — скролл в 3 раза медленнее
+  let isPointerActive = false;
+  let activePointerId = null;
+  let lastY = 0;
+  let lastTime = 0;
+  let velocity = 0;
 
-feed.addEventListener("touchstart", (e) => {
-    isTouching = true;
-    lastY = e.touches[0].clientY;
-}, { passive: false });
+  // ставим свойство, чтобы браузер не интерпретировал жесты иначе
+  try { feedEl.style.touchAction = 'none'; } catch (e) {}
 
-feed.addEventListener("touchmove", (e) => {
-    if (!isTouching) return;
+  feedEl.addEventListener('pointerdown', (ev) => {
+    // работаем только с тач-поинтами
+    if (ev.pointerType !== 'touch') return;
+    isPointerActive = true;
+    activePointerId = ev.pointerId;
+    lastY = ev.clientY;
+    lastTime = performance.now();
+    velocity = 0;
+    feedEl.setPointerCapture && feedEl.setPointerCapture(ev.pointerId);
+  }, { passive: true });
 
-    e.preventDefault(); // отключаем нативный быстрый скролл
+  feedEl.addEventListener('pointermove', (ev) => {
+    if (!isPointerActive || ev.pointerId !== activePointerId) return;
+    if (ev.pointerType !== 'touch') return;
 
-    const currentY = e.touches[0].clientY;
-    const delta = (lastY - currentY) * slowFactor; // замедляем движение
+    ev.preventDefault && ev.preventDefault(); // требуется passive:false, но pointer не пассивен
+    const now = performance.now();
+    const dy = lastY - ev.clientY;
+    const dt = Math.max(1, now - lastTime);
+    // вычисляем мгновенную скорость (px / ms)
+    const instVel = dy / dt;
 
-    feed.scrollTop += delta;
-    lastY = currentY;
-}, { passive: false });
+    // применяем замедление
+    const delta = dy * SLOW_FACTOR;
+    feedEl.scrollTop += delta;
 
-feed.addEventListener("touchend", () => {
-    isTouching = false;
-});
+    // сохраняем для возможной инерции
+    velocity = 0.85 * velocity + 0.15 * instVel;
+    lastY = ev.clientY;
+    lastTime = now;
+  }, { passive: false });
+
+  function releasePointer(ev) {
+    if (!isPointerActive || ev.pointerId !== activePointerId) return;
+    // можно добавить лёгкую инерцию (опционально)
+    const startVel = velocity; // px / ms
+    if (Math.abs(startVel) > 0.01) {
+      // инерция: смещение зависит от скорости и SLOW_FACTOR
+      const duration = Math.min(MAX_INERTIA_MS, Math.abs(startVel) * 800);
+      const totalPx = startVel * duration * SLOW_FACTOR * 0.8;
+      const start = performance.now();
+      const from = feedEl.scrollTop;
+      (function step() {
+        const t = performance.now() - start;
+        const p = Math.min(1, t / duration);
+        // ease-out
+        const ease = 1 - Math.pow(1 - p, 2);
+        feedEl.scrollTop = from + totalPx * ease;
+        if (p < 1) requestAnimationFrame(step);
+      })();
+    }
+
+    try { feedEl.releasePointerCapture && feedEl.releasePointerCapture(ev.pointerId); } catch(e){}
+    isPointerActive = false;
+    activePointerId = null;
+    velocity = 0;
+  }
+
+  feedEl.addEventListener('pointerup', releasePointer, { passive: true });
+  feedEl.addEventListener('pointercancel', releasePointer, { passive: true });
+  // -------------------------------------------------------
+})();
+
 
 
 
