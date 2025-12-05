@@ -335,6 +335,20 @@ body {
     display: inline-block;
 }
 
+
+
+.photooption {
+    background: #253648;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 15px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+}
+    
+
 .option {
     background: #253648;
     padding: 12px;
@@ -933,7 +947,10 @@ body {
 <!-- SCREEN 3 -->
 <div id="payment" class="screen">
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
-    <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> <p id="summary-text">Данные заказа: </p> #<span id="orderNum"></span>    </div>
+    
+    <div style="photooption">
+    <div style="color:#6ab2f2; width:80%; margin:0 auto; text-align:center; margin-bottom:7px; margin-top: -10px; z-index: 2;"> Данные по заказу #<span id="orderNum"></span></div>
+    
     <div id="blocked-photos-container" style="
     display: flex;
     gap: 10px;
@@ -947,7 +964,7 @@ body {
     <div class="blocked-photo" data-id="67"></div>
     <div class="blocked-photo" data-id="89"></div>
 </div>
-
+</div>
     
   <div class="blocked-text-wrapper">
     Координаты: <span class="blocked-text">545211</span>.<span class="blocked-text">4354313</span>.
