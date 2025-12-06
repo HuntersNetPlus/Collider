@@ -1278,8 +1278,13 @@ async function updateConversion() {
   document.getElementById("randomId").textContent = generateRandomId();
     
 
-    // Кнопка открытия
-    document.getElementById('welcomeBtn').addEventListener('click', () => openScreen('choose'));
+   // Кнопка открытия
+document.getElementById('welcomeBtn').addEventListener('click', () => {
+    if (selectedCity && selectedMetro) {
+        console.log(`Выбран город: ${selectedCity}, метро: ${selectedMetro}`);
+        openScreen('choose');
+    }
+});
 
     // Выбор опции
     document.querySelectorAll('#choose .option').forEach(opt => {
@@ -1889,13 +1894,7 @@ metroSelect.addEventListener('change', function() {
     }
 });
 
-// Обработчик кнопки (уже есть, но убедись что он не дублируется)
-document.getElementById('welcomeBtn').addEventListener('click', () => {
-    if (selectedCity && selectedMetro) {
-        console.log(`Выбран город: ${selectedCity}, метро: ${selectedMetro}`);
-        openScreen('choose');
-    }
-});
+ 
 
 
 
