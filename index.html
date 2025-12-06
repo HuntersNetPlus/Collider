@@ -27,10 +27,8 @@ body {
 
 
 #card-feed {
-    overflow-y: auto;
-    touch-action: pan-y;
-    overscroll-behavior-y: contain;
-    scroll-snap-type: y proximity; /* Добавь это */
+    overflow-y: hidden; /* отключить встроенный скролл */
+    touch-action: none; /* обязательно */
 }
 
 
@@ -287,6 +285,8 @@ body {
     height: 400px; /* твоя высота */
     overflow-y: auto;
     position: relative;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
     
 
     /* Маска градиентом сверху и снизу */
