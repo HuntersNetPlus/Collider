@@ -1997,31 +1997,47 @@ function shuffle(array) {
 function initFeed() {
     const shuffled = shuffle([...originalOptions]);
     feed.innerHTML = "";
-    shuffled.forEach(opt => {
-        const clone = opt.cloneNode(true);
-        attachClickHandler(clone);
-        feed.appendChild(clone);
-    });
+    
+    // Добавляем товары дважды для более плавного скролла
+    for (let round = 0; round < 2; round++) {
+        shuffled.forEach(opt => {
+            const clone = opt.cloneNode(true);
+            attachClickHandler(clone);
+            feed.appendChild(clone);
+        });
+    }
 }
 
 initFeed();
 
 // Постепенное добавление элементов при скролле
+let lastAddTime = 0;
+const ADD_DELAY = 300; // Минимальная задержка между добавлениями (мс)
+
 feed.addEventListener("scroll", () => {
-    // Срабатываем только если почти дошли до низа
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 5) {
+    const now = Date.now();
+    
+    // Срабатываем только если почти дошли до низа И прошло достаточно времени
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 100) { // Увеличил с 5 до 100
+        
+        // Проверяем задержку
+        if (now - lastAddTime < ADD_DELAY) return;
+        lastAddTime = now;
+        
         const shuffled = shuffle([...originalOptions]);
         
-        // Добавляем по одному элементу за раз
-        const clone = shuffled[0].cloneNode(true);
-        attachClickHandler(clone);
-        feed.appendChild(clone);
+        // Добавляем сразу 3 элемента за раз (вместо 1)
+        for (let i = 0; i < 3 && i < shuffled.length; i++) {
+            const clone = shuffled[i].cloneNode(true);
+            attachClickHandler(clone);
+            feed.appendChild(clone);
+        }
     }
 
-    // Чтобы блок не разрастался бесконечно — перезапускаем, когда > 30 элементов
-    if (feed.children.length > 30) {
+    // Чтобы блок не разрастался бесконечно — перезапускаем, когда > 40 элементов
+    if (feed.children.length > 40) {
         initFeed();
-            }
+    }
 });
 
 
@@ -2316,7 +2332,7 @@ window.addEventListener('load', function() {
         return;
     }
     
-    const SCROLL_SPEED = 0.00001; // Регулируй от 0.1 (очень медленно) до 1.0 (обычная скорость)
+    const SCROLL_SPEED = 0.3; // Регулируй от 0.1 (очень медленно) до 1.0 (обычная скорость)
     
     let isTouching = false;
     let lastTouchY = 0;
@@ -2348,14 +2364,19 @@ window.addEventListener('load', function() {
     }, { passive: true });
     
     // ===== ДЛЯ МЫШИ/ТАЧПАДА =====
-    feed.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        feed.scrollTop += e.deltaY * SCROLL_SPEED;
-        console.log('🖱️ Wheel scroll');
-    }, { passive: false });
+feed.addEventListener('wheel', function(e) {
+    e.preventDefault();
     
-    console.log('✅ Медленный скролл подключен (touch + wheel)');
-});
+    // Плавная анимация вместо резкого скачка
+    const targetScroll = feed.scrollTop + (e.deltaY * SCROLL_SPEED);
+    
+    feed.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth' // ДОБАВЬ плавность
+    });
+    
+    console.log('🖱️ Wheel scroll');
+}, { passive: false });
 </script>
 
     
