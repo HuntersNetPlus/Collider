@@ -27,8 +27,9 @@ body {
 
 
 #card-feed {
-    overflow-y: hidden; /* отключить встроенный скролл */
-    touch-action: none; /* обязательно */
+    overflow-y: scroll;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 }
 
 
@@ -2023,48 +2024,6 @@ feed.addEventListener("scroll", () => {
             }
 });
 
-// ------------ Медленный скролл для feed (улучшенный) ------------
-(function() {
-  const feedEl = document.getElementById("card-feed");
-  if (!feedEl) return;
-
-  const SLOW_FACTOR = 0.8; // Регулируй от 0.1 (быстро) до 0.5 (медленно)
-  
-  let isScrolling = false;
-  let startY = 0;
-  let startScrollTop = 0;
-
-  // Для touch событий
-  feedEl.addEventListener('touchstart', (e) => {
-    isScrolling = true;
-    startY = e.touches[0].clientY;
-    startScrollTop = feedEl.scrollTop;
-    feedEl.style.scrollBehavior = 'auto';
-  }, { passive: true });
-
-  feedEl.addEventListener('touchmove', (e) => {
-    if (!isScrolling) return;
-    
-    const currentY = e.touches[0].clientY;
-    const deltaY = (startY - currentY) * SLOW_FACTOR;
-    
-    feedEl.scrollTop = startScrollTop + deltaY;
-  }, { passive: true });
-
-  feedEl.addEventListener('touchend', () => {
-    isScrolling = false;
-    feedEl.style.scrollBehavior = 'smooth';
-  }, { passive: true });
-
-  // Для wheel событий (мышь/тачпад)
-  feedEl.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    feedEl.scrollTop += e.deltaY * SLOW_FACTOR;
-  }, { passive: false });
-  
-})();
-// -------------------------------------------------------
-
 
 
 
@@ -2301,7 +2260,47 @@ summary.innerText ="Данные заказа: " + selected.name;
 
 
 
-
+// ========== МЕДЛЕННЫЙ СКРОЛЛ ДЛЯ FEED ==========
+(function() {
+    const feed = document.getElementById("card-feed");
+    if (!feed) return;
+    
+    const SCROLL_SPEED = 0.4; // Чем меньше значение, тем медленнее (от 0.1 до 1)
+    
+    let scrolling = false;
+    let lastY = 0;
+    
+    // Для touch
+    feed.addEventListener('touchstart', function(e) {
+        scrolling = true;
+        lastY = e.touches[0].clientY;
+    });
+    
+    feed.addEventListener('touchmove', function(e) {
+        if (!scrolling) return;
+        
+        const currentY = e.touches[0].clientY;
+        const delta = (lastY - currentY) * SCROLL_SPEED;
+        
+        feed.scrollTop += delta;
+        lastY = currentY;
+        
+        e.preventDefault();
+    }, { passive: false });
+    
+    feed.addEventListener('touchend', function() {
+        scrolling = false;
+    });
+    
+    // Для мыши (wheel)
+    feed.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        feed.scrollTop += e.deltaY * SCROLL_SPEED;
+    }, { passive: false });
+    
+    console.log('Медленный скролл активирован');
+})();
+// ================================================
 
 
 
