@@ -287,6 +287,9 @@ body {
     height: 400px; /* твоя высота */
     overflow-y: auto;
     position: relative;
+     /* Добавь эти строки ↓ */
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
 
     /* Маска градиентом сверху и снизу */
     -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0));
