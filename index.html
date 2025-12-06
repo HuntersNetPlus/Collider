@@ -1822,7 +1822,7 @@ document.getElementById('orderNum').innerText = Math.floor(1000000 + Math.random
 
 
 
- // ВЫБОР ГОРОДА И МЕТРО
+// ВЫБОР ГОРОДА И МЕТРО
 const metroData = {
     moscow: [
         "Комсомольская", "Красные Ворота", "Чистые пруды", "Лубянка", "Охотный Ряд",
@@ -1855,12 +1855,12 @@ citySelect.addEventListener('change', function() {
     selectedCity = this.value;
     selectedMetro = '';
     
+    console.log('Выбран город:', selectedCity); // для отладки
+    
     if (selectedCity) {
-        // Включаем выбор метро
         metroSelect.disabled = false;
         metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
         
-        // Добавляем станции метро для выбранного города
         metroData[selectedCity].forEach(station => {
             const option = document.createElement('option');
             option.value = station;
@@ -1868,11 +1868,9 @@ citySelect.addEventListener('change', function() {
             metroSelect.appendChild(option);
         });
         
-        // Кнопка остаётся заблокированной
         welcomeBtn.disabled = true;
         welcomeBtn.style.opacity = '0.5';
     } else {
-        // Если город не выбран - блокируем всё
         metroSelect.disabled = true;
         metroSelect.innerHTML = '<option value="">Сначала выберите город</option>';
         welcomeBtn.disabled = true;
@@ -1883,12 +1881,12 @@ citySelect.addEventListener('change', function() {
 metroSelect.addEventListener('change', function() {
     selectedMetro = this.value;
     
+    console.log('Выбрано метро:', selectedMetro); // для отладки
+    
     if (selectedMetro) {
-        // Разблокируем кнопку
         welcomeBtn.disabled = false;
         welcomeBtn.style.opacity = '1';
     } else {
-        // Блокируем кнопку
         welcomeBtn.disabled = true;
         welcomeBtn.style.opacity = '0.5';
     }
