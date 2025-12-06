@@ -543,7 +543,7 @@ body {
     <img src="https://github.com/HuntersNetPlus/Collider/blob/main/GH%20LOGO%20WEBP.webp?raw=true" style="width:300px; display:block; margin:0 auto;">
     
     <div style="text-align:center; color:white; font-weight:bold;">
-        Доступные позиции:
+        Витрина метро <span class="metro-text">—</span>:
     </div>
     <div id="card-feed" class="feed">
         
@@ -1118,6 +1118,26 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/kjua@0.6.0/dist/kjua.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+// Функция обновления всех span с городом и метро
+    function updateLocationTexts() {
+        const cityNames = {
+            moscow: 'Москва',
+            spb: 'Санкт-Петербург',
+            kazan: 'Казань',
+            ekb: 'Екатеринбург'
+        };
+        
+        document.querySelectorAll('.metro-text').forEach(el => {
+            el.textContent = selectedMetro || '—';
+        });
+        
+        document.querySelectorAll('.city-text').forEach(el => {
+            el.textContent = cityNames[selectedCity] || '—';
+        });
+    }
+
+    
     const screens = {
         welcome: document.getElementById('welcome'),
         choose: document.getElementById('choose'),
@@ -1157,14 +1177,17 @@ document.addEventListener('DOMContentLoaded', () => {
  
       
 
-    function openScreen(id) {
-        Object.values(screens).forEach(s => s.classList.remove('active'));
-        loader.style.display = 'flex';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            screens[id].classList.add('active');
-        }, 900);
-    }
+function openScreen(id) {
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    loader.style.display = 'flex';
+    setTimeout(() => {
+        loader.style.display = 'none';
+        screens[id].classList.add('active');
+        
+        // ДОБАВЛЕНА ЭТА СТРОКА ↓
+        updateLocationTexts();
+    }, 900);
+}
 
     function selectOption(name, price) {
         const discount = price * 0.5;
@@ -1357,7 +1380,7 @@ metroSelect.addEventListener('change', function() {
 
     
 
-   // Кнопка открытия
+ // Кнопка открытия
 document.getElementById('welcomeBtn').addEventListener('click', () => {
     if (selectedCity && selectedMetro) {
         console.log(`Выбран город: ${selectedCity}, метро: ${selectedMetro}`);
