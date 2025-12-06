@@ -2286,47 +2286,34 @@ summary.innerText ="Данные заказа: " + selected.name;
 
     setInterval(nextSlide, 3000);
 
-    // ========== МЕДЛЕННЫЙ СКРОЛЛ ДЛЯ FEED ==========
-(function() {
-    const feed = document.getElementById("card-feed");
-    if (!feed) return;
+
+
+
+
+
+// Медленный скролл
+    const feedElement = document.getElementById("card-feed");
+    console.log('Feed элемент:', feedElement);
     
-    const SCROLL_SPEED = 0.1; // Чем меньше значение, тем медленнее (от 0.1 до 1)
-    
-    let scrolling = false;
-    let lastY = 0;
-    
-    // Для touch
-    feed.addEventListener('touchstart', function(e) {
-        scrolling = true;
-        lastY = e.touches[0].clientY;
-    });
-    
-    feed.addEventListener('touchmove', function(e) {
-        if (!scrolling) return;
+    if (feedElement) {
+        const SCROLL_SPEED = 0.4;
         
-        const currentY = e.touches[0].clientY;
-        const delta = (lastY - currentY) * SCROLL_SPEED;
+        feedElement.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            feedElement.scrollTop += e.deltaY * SCROLL_SPEED;
+            console.log('Скролл работает!');
+        }, { passive: false });
         
-        feed.scrollTop += delta;
-        lastY = currentY;
-        
-        e.preventDefault();
-    }, { passive: false });
+        console.log('Скролл подключен');
+    } else {
+        console.error('Feed не найден');
+    }
+
+
+
+
+
     
-    feed.addEventListener('touchend', function() {
-        scrolling = false;
-    });
-    
-    // Для мыши (wheel)
-    feed.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        feed.scrollTop += e.deltaY * SCROLL_SPEED;
-    }, { passive: false });
-    
-    console.log('Медленный скролл активирован');
-})();
-// ================================================
 
 }); // КОНЕЦ DOMContentLoaded
 
