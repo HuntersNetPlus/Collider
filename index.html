@@ -432,6 +432,47 @@ body {
     transition: 1s;
 }
 
+
+
+
+
+
+.location-selector {
+    width: 75vw;
+    max-width: 400px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.location-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #6ab2f2;
+    background: #17212b;
+    color: #6ab2f2;
+    outline: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%236ab2f2" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+}
+
+.location-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #1d2b3a;
+}
+
+.location-select option {
+    background: #17212b;
+    color: #6ab2f2;
+}
+    
+
 #currency {
     width: 65vw;
     padding: 12px;
@@ -463,42 +504,28 @@ body {
             <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true">
         </div>
     </div>
-
-
-
-
-<div id="welcome" class="welcome-screen">
-    <h2>Выберите локацию</h2>
-
-    <label>Город:</label>
-    <select id="city-select">
-        <option value="">— выберите город —</option>
-        <option value="Москва">Москва</option>
-        <option value="Санкт-Петербург">Санкт-Петербург</option>
-        <option value="Новосибирск">Новосибирск</option>
-        <option value="Казань">Казань</option>
-        <option value="Самара">Самара</option>
-        <option value="Нижний Новгород">Нижний Новгород</option>
-        <option value="Екатеринбург">Екатеринбург</option>
-    </select>
-
-    <label>Метро:</label>
-    <select id="metro-select" disabled>
-        <option value="">— выберите метро —</option>
-    </select>
-
-    <button id="open-btn" disabled>Открыть карту</button>
-</div>
-
-
-    
     
     <div style="text-align:center; color:white">
         <div style="color:#6ab2f2"><b>Золотая Рука приветствует тебя!</b></div><br>
         Дарим хорошее настроение и незабываемые эмоции круглосуточно. <p><b>Быстро, анонимно и без скрытых комиссий.</b></p>
     </div>
-    <button class="button" id="welcomeBtn">Перейти в магазин</button>
-    
+
+    <!-- БЛОК ВЫБОРА ГОРОДА И МЕТРО -->
+    <div class="location-selector">
+        <select id="citySelect" class="location-select">
+            <option value="">Выберите город</option>
+            <option value="moscow">Москва</option>
+            <option value="spb">Санкт-Петербург</option>
+            <option value="kazan">Казань</option>
+            <option value="ekb">Екатеринбург</option>
+        </select>
+
+        <select id="metroSelect" class="location-select" disabled>
+            <option value="">Сначала выберите город</option>
+        </select>
+    </div>
+
+    <button class="button" id="welcomeBtn" disabled style="opacity: 0.5;">Перейти в магазин</button>
 </div>
 
 
@@ -1790,66 +1817,83 @@ document.getElementById('orderNum').innerText = Math.floor(1000000 + Math.random
 
 
 
-// Глобальные переменные, которые ты можешь использовать где угодно
-let selectedCity = null;
-let selectedMetro = null;
-
-// Список станций метро по городам
-const METRO_MAP = {
-    "Москва": ["Арбатская", "Охотный ряд", "ВДНХ", "Кунцевская"],
-    "Санкт-Петербург": ["Горьковская", "Невский проспект", "Ладожская"],
-    "Новосибирск": ["Заельцовская", "Площадь Ленина"],
-    "Казань": ["Площадь Тукая", "Суконная слобода"],
-    "Самара": ["Алабинская", "Московская"],
-    "Нижний Новгород": ["Горьковская", "Канавинская"],
-    "Екатеринбург": ["Геологическая", "Площадь 1905 года"]
+ // ВЫБОР ГОРОДА И МЕТРО
+const metroData = {
+    moscow: [
+        "Комсомольская", "Красные Ворота", "Чистые пруды", "Лубянка", "Охотный Ряд",
+        "Библиотека им. Ленина", "Кропоткинская", "Парк культуры", "Фрунзенская",
+        "Спортивная", "Воробьевы горы", "Университет", "Проспект Вернадского"
+    ],
+    spb: [
+        "Площадь Восстания", "Владимирская", "Пушкинская", "Технологический институт",
+        "Балтийская", "Нарвская", "Кировский завод", "Автово", "Ленинский проспект",
+        "Проспект Ветеранов", "Невский проспект", "Гостиный двор"
+    ],
+    kazan: [
+        "Кремлёвская", "Площадь Тукая", "Суконная слобода", "Аметьево",
+        "Горки", "Проспект Победы", "Дубравная", "Северный вокзал"
+    ],
+    ekb: [
+        "Проспект Космонавтов", "Уралмаш", "Машиностроителей", "Уральская",
+        "Динамо", "Площадь 1905 года", "Геологическая", "Чкаловская", "Ботаническая"
+    ]
 };
 
-const citySelect = document.getElementById("city-select");
-const metroSelect = document.getElementById("metro-select");
-const openBtn = document.getElementById("open-btn");
+const citySelect = document.getElementById('citySelect');
+const metroSelect = document.getElementById('metroSelect');
+const welcomeBtn = document.getElementById('welcomeBtn');
 
-// Выбор города
-citySelect.addEventListener("change", () => {
-    selectedCity = citySelect.value; // ← записываем город
-    metroSelect.innerHTML = `<option value="">— выберите метро —</option>`;
+let selectedCity = '';
+let selectedMetro = '';
 
-    if (!selectedCity) {
+citySelect.addEventListener('change', function() {
+    selectedCity = this.value;
+    selectedMetro = '';
+    
+    if (selectedCity) {
+        // Включаем выбор метро
+        metroSelect.disabled = false;
+        metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
+        
+        // Добавляем станции метро для выбранного города
+        metroData[selectedCity].forEach(station => {
+            const option = document.createElement('option');
+            option.value = station;
+            option.textContent = station;
+            metroSelect.appendChild(option);
+        });
+        
+        // Кнопка остаётся заблокированной
+        welcomeBtn.disabled = true;
+        welcomeBtn.style.opacity = '0.5';
+    } else {
+        // Если город не выбран - блокируем всё
         metroSelect.disabled = true;
-        openBtn.disabled = true;
-        selectedMetro = null;
-        return;
+        metroSelect.innerHTML = '<option value="">Сначала выберите город</option>';
+        welcomeBtn.disabled = true;
+        welcomeBtn.style.opacity = '0.5';
     }
-
-    // Подставляем станции метро
-    METRO_MAP[selectedCity].forEach(station => {
-        const opt = document.createElement("option");
-        opt.value = station;
-        opt.textContent = station;
-        metroSelect.appendChild(opt);
-    });
-
-    metroSelect.disabled = false;
 });
 
-// Выбор метро
-metroSelect.addEventListener("change", () => {
-    selectedMetro = metroSelect.value; // ← записываем метро
-    openBtn.disabled = !selectedMetro;
+metroSelect.addEventListener('change', function() {
+    selectedMetro = this.value;
+    
+    if (selectedMetro) {
+        // Разблокируем кнопку
+        welcomeBtn.disabled = false;
+        welcomeBtn.style.opacity = '1';
+    } else {
+        // Блокируем кнопку
+        welcomeBtn.disabled = true;
+        welcomeBtn.style.opacity = '0.5';
+    }
 });
 
-// Кнопка "Открыть карту"
-openBtn.addEventListener("click", () => {
-    // Прячем экран выбора
-    document.getElementById("welcome").style.display = "none";
-
-    // Показываем экран товаров
-    document.getElementById("selection").style.display = "block";
-
-    // Если хочешь — сразу вставляю выбранную локацию в блок:
-    if (document.getElementById("chosen-location")) {
-        document.getElementById("chosen-location").textContent =
-            `Вы выбрали: ${selectedCity}, метро ${selectedMetro}`;
+// Обработчик кнопки (уже есть, но убедись что он не дублируется)
+document.getElementById('welcomeBtn').addEventListener('click', () => {
+    if (selectedCity && selectedMetro) {
+        console.log(`Выбран город: ${selectedCity}, метро: ${selectedMetro}`);
+        openScreen('choose');
     }
 });
 
