@@ -1276,6 +1276,85 @@ async function updateConversion() {
 
   // Вставляем случайный ID в span
   document.getElementById("randomId").textContent = generateRandomId();
+
+
+
+
+
+
+// ВЫБОР ГОРОДА И МЕТРО
+const metroData = {
+    moscow: [
+        "Комсомольская", "Красные Ворота", "Чистые пруды", "Лубянка", "Охотный Ряд",
+        "Библиотека им. Ленина", "Кропоткинская", "Парк культуры", "Фрунзенская",
+        "Спортивная", "Воробьевы горы", "Университет", "Проспект Вернадского"
+    ],
+    spb: [
+        "Площадь Восстания", "Владимирская", "Пушкинская", "Технологический институт",
+        "Балтийская", "Нарвская", "Кировский завод", "Автово", "Ленинский проспект",
+        "Проспект Ветеранов", "Невский проспект", "Гостиный двор"
+    ],
+    kazan: [
+        "Кремлёвская", "Площадь Тукая", "Суконная слобода", "Аметьево",
+        "Горки", "Проспект Победы", "Дубравная", "Северный вокзал"
+    ],
+    ekb: [
+        "Проспект Космонавтов", "Уралмаш", "Машиностроителей", "Уральская",
+        "Динамо", "Площадь 1905 года", "Геологическая", "Чкаловская", "Ботаническая"
+    ]
+};
+
+const citySelect = document.getElementById('citySelect');
+const metroSelect = document.getElementById('metroSelect');
+const welcomeBtn = document.getElementById('welcomeBtn');
+
+let selectedCity = '';
+let selectedMetro = '';
+
+citySelect.addEventListener('change', function() {
+    selectedCity = this.value;
+    selectedMetro = '';
+    
+    console.log('Выбран город:', selectedCity); // для отладки
+    
+    if (selectedCity) {
+        metroSelect.disabled = false;
+        metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
+        
+        metroData[selectedCity].forEach(station => {
+            const option = document.createElement('option');
+            option.value = station;
+            option.textContent = station;
+            metroSelect.appendChild(option);
+        });
+        
+        welcomeBtn.disabled = true;
+        welcomeBtn.style.opacity = '0.5';
+    } else {
+        metroSelect.disabled = true;
+        metroSelect.innerHTML = '<option value="">Сначала выберите город</option>';
+        welcomeBtn.disabled = true;
+        welcomeBtn.style.opacity = '0.5';
+    }
+});
+
+metroSelect.addEventListener('change', function() {
+    selectedMetro = this.value;
+    
+    console.log('Выбрано метро:', selectedMetro); // для отладки
+    
+    if (selectedMetro) {
+        welcomeBtn.disabled = false;
+        welcomeBtn.style.opacity = '1';
+    } else {
+        welcomeBtn.disabled = true;
+        welcomeBtn.style.opacity = '0.5';
+    }
+});
+
+
+
+
     
 
    // Кнопка открытия
@@ -1822,76 +1901,7 @@ document.getElementById('orderNum').innerText = Math.floor(1000000 + Math.random
 
 
 
-// ВЫБОР ГОРОДА И МЕТРО
-const metroData = {
-    moscow: [
-        "Комсомольская", "Красные Ворота", "Чистые пруды", "Лубянка", "Охотный Ряд",
-        "Библиотека им. Ленина", "Кропоткинская", "Парк культуры", "Фрунзенская",
-        "Спортивная", "Воробьевы горы", "Университет", "Проспект Вернадского"
-    ],
-    spb: [
-        "Площадь Восстания", "Владимирская", "Пушкинская", "Технологический институт",
-        "Балтийская", "Нарвская", "Кировский завод", "Автово", "Ленинский проспект",
-        "Проспект Ветеранов", "Невский проспект", "Гостиный двор"
-    ],
-    kazan: [
-        "Кремлёвская", "Площадь Тукая", "Суконная слобода", "Аметьево",
-        "Горки", "Проспект Победы", "Дубравная", "Северный вокзал"
-    ],
-    ekb: [
-        "Проспект Космонавтов", "Уралмаш", "Машиностроителей", "Уральская",
-        "Динамо", "Площадь 1905 года", "Геологическая", "Чкаловская", "Ботаническая"
-    ]
-};
-
-const citySelect = document.getElementById('citySelect');
-const metroSelect = document.getElementById('metroSelect');
-const welcomeBtn = document.getElementById('welcomeBtn');
-
-let selectedCity = '';
-let selectedMetro = '';
-
-citySelect.addEventListener('change', function() {
-    selectedCity = this.value;
-    selectedMetro = '';
-    
-    console.log('Выбран город:', selectedCity); // для отладки
-    
-    if (selectedCity) {
-        metroSelect.disabled = false;
-        metroSelect.innerHTML = '<option value="">Выберите станцию метро</option>';
-        
-        metroData[selectedCity].forEach(station => {
-            const option = document.createElement('option');
-            option.value = station;
-            option.textContent = station;
-            metroSelect.appendChild(option);
-        });
-        
-        welcomeBtn.disabled = true;
-        welcomeBtn.style.opacity = '0.5';
-    } else {
-        metroSelect.disabled = true;
-        metroSelect.innerHTML = '<option value="">Сначала выберите город</option>';
-        welcomeBtn.disabled = true;
-        welcomeBtn.style.opacity = '0.5';
-    }
-});
-
-metroSelect.addEventListener('change', function() {
-    selectedMetro = this.value;
-    
-    console.log('Выбрано метро:', selectedMetro); // для отладки
-    
-    if (selectedMetro) {
-        welcomeBtn.disabled = false;
-        welcomeBtn.style.opacity = '1';
-    } else {
-        welcomeBtn.disabled = true;
-        welcomeBtn.style.opacity = '0.5';
-    }
-});
-
+ 
  
 
 
