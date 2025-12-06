@@ -1038,7 +1038,7 @@ body {
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
     
   <div style="width:69%; border: 1px solid #6ab2f2 ; border-radius: 8px;margin-bottom:5px;">
-    <div style="color:#6ab2f2; width:80%; margin:0 auto; background: #17212b; text-align:center;  margin-top: -10px; z-index: 2;"> Данные заказа <span class="order-id">—</span> <br> <br> 
+    <div style="color:#6ab2f2; width:80%; margin:0 auto; background: #17212b; text-align:center;  margin-top: -10px; z-index: 2;"> Данные заказа #<span class="order-id">—</span> <br> <br> 
 
   <div><span class="city-text">—</span>, <span class="metro-text">—</span><br><span class="product-name">—</span> </div> <br> Галерея фото:
 
@@ -1666,87 +1666,47 @@ feed.addEventListener("scroll", () => {
             }
 });
 
-// ------------ Медленный тач-скролл для feed ------------
+// ------------ Медленный скролл для feed (улучшенный) ------------
 (function() {
-  if (typeof window === 'undefined') return;
   const feedEl = document.getElementById("card-feed");
-  if (!feedEl) return; // если нет — ничего не делаем
+  if (!feedEl) return;
 
-  // Параметры
-  const SLOW_FACTOR = 0.11; // 0.28 — скролл в ~3.6 раза медленнее. Подбери под себя.
-  const MAX_INERTIA_MS = 150; // время продолжения инерции (необязательно)
+  const SLOW_FACTOR = 0.3; // Регулируй от 0.1 (быстро) до 0.5 (медленно)
+  
+  let isScrolling = false;
+  let startY = 0;
+  let startScrollTop = 0;
 
-  let isPointerActive = false;
-  let activePointerId = null;
-  let lastY = 0;
-  let lastTime = 0;
-  let velocity = 0;
-
-  // ставим свойство, чтобы браузер не интерпретировал жесты иначе
-  try { feedEl.style.touchAction = 'none'; } catch (e) {}
-
-  feedEl.addEventListener('pointerdown', (ev) => {
-    // работаем только с тач-поинтами
-    if (ev.pointerType !== 'touch') return;
-    isPointerActive = true;
-    activePointerId = ev.pointerId;
-    lastY = ev.clientY;
-    lastTime = performance.now();
-    velocity = 0;
-    feedEl.setPointerCapture && feedEl.setPointerCapture(ev.pointerId);
+  // Для touch событий
+  feedEl.addEventListener('touchstart', (e) => {
+    isScrolling = true;
+    startY = e.touches[0].clientY;
+    startScrollTop = feedEl.scrollTop;
+    feedEl.style.scrollBehavior = 'auto';
   }, { passive: true });
 
-  feedEl.addEventListener('pointermove', (ev) => {
-    if (!isPointerActive || ev.pointerId !== activePointerId) return;
-    if (ev.pointerType !== 'touch') return;
+  feedEl.addEventListener('touchmove', (e) => {
+    if (!isScrolling) return;
+    
+    const currentY = e.touches[0].clientY;
+    const deltaY = (startY - currentY) * SLOW_FACTOR;
+    
+    feedEl.scrollTop = startScrollTop + deltaY;
+  }, { passive: true });
 
-    ev.preventDefault && ev.preventDefault(); // требуется passive:false, но pointer не пассивен
-    const now = performance.now();
-    const dy = lastY - ev.clientY;
-    const dt = Math.max(1, now - lastTime);
-    // вычисляем мгновенную скорость (px / ms)
-    const instVel = dy / dt;
+  feedEl.addEventListener('touchend', () => {
+    isScrolling = false;
+    feedEl.style.scrollBehavior = 'smooth';
+  }, { passive: true });
 
-    // применяем замедление
-    const delta = dy * SLOW_FACTOR;
-    feedEl.scrollTop += delta;
-
-    // сохраняем для возможной инерции
-    velocity = 0.85 * velocity + 0.15 * instVel;
-    lastY = ev.clientY;
-    lastTime = now;
+  // Для wheel событий (мышь/тачпад)
+  feedEl.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    feedEl.scrollTop += e.deltaY * SLOW_FACTOR;
   }, { passive: false });
-
-  function releasePointer(ev) {
-    if (!isPointerActive || ev.pointerId !== activePointerId) return;
-    // можно добавить лёгкую инерцию (опционально)
-    const startVel = velocity; // px / ms
-    if (Math.abs(startVel) > 0.01) {
-      // инерция: смещение зависит от скорости и SLOW_FACTOR
-      const duration = Math.min(MAX_INERTIA_MS, Math.abs(startVel) * 800);
-      const totalPx = startVel * duration * SLOW_FACTOR * 0.8;
-      const start = performance.now();
-      const from = feedEl.scrollTop;
-      (function step() {
-        const t = performance.now() - start;
-        const p = Math.min(1, t / duration);
-        // ease-out
-        const ease = 1 - Math.pow(1 - p, 2);
-        feedEl.scrollTop = from + totalPx * ease;
-        if (p < 1) requestAnimationFrame(step);
-      })();
-    }
-
-    try { feedEl.releasePointerCapture && feedEl.releasePointerCapture(ev.pointerId); } catch(e){}
-    isPointerActive = false;
-    activePointerId = null;
-    velocity = 0;
-  }
-
-  feedEl.addEventListener('pointerup', releasePointer, { passive: true });
-  feedEl.addEventListener('pointercancel', releasePointer, { passive: true });
-  // -------------------------------------------------------
+  
 })();
+// -------------------------------------------------------
 
 
 
