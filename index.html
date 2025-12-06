@@ -2260,7 +2260,33 @@ summary.innerText ="Данные заказа: " + selected.name;
 
 
 
-// ========== МЕДЛЕННЫЙ СКРОЛЛ ДЛЯ FEED ==========
+
+
+
+
+
+
+
+
+
+    
+    
+    function nextSlide() {
+        if (total === 0) return;
+        
+        const current = slides[index];
+        current.classList.remove("active");
+        current.classList.add("out");
+
+        index = (index + 1) % total;
+        const next = slides[index];
+        next.classList.remove("out");
+        next.classList.add("active");
+    } 
+
+    setInterval(nextSlide, 3000);
+
+    // ========== МЕДЛЕННЫЙ СКРОЛЛ ДЛЯ FEED ==========
 (function() {
     const feed = document.getElementById("card-feed");
     if (!feed) return;
@@ -2301,30 +2327,6 @@ summary.innerText ="Данные заказа: " + selected.name;
     console.log('Медленный скролл активирован');
 })();
 // ================================================
-
-
-
-
-
-
-
-
-    
-    
-    function nextSlide() {
-        if (total === 0) return;
-        
-        const current = slides[index];
-        current.classList.remove("active");
-        current.classList.add("out");
-
-        index = (index + 1) % total;
-        const next = slides[index];
-        next.classList.remove("out");
-        next.classList.add("active");
-    } 
-
-    setInterval(nextSlide, 3000);
 
 }); // КОНЕЦ DOMContentLoaded
 
