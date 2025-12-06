@@ -2319,5 +2319,31 @@ summary.innerText ="Данные заказа: " + selected.name;
 
 </script>
 
+
+<script>
+window.addEventListener('load', function() {
+    console.log('🟢 Отдельный скрипт запущен');
+    
+    const feed = document.getElementById("card-feed");
+    console.log('Feed элемент:', feed);
+    
+    if (feed) {
+        const SCROLL_SPEED = 0.4;
+        
+        feed.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            feed.scrollTop += e.deltaY * SCROLL_SPEED;
+            console.log('⚡ Скролл!');
+        }, { passive: false });
+        
+        console.log('✅ Медленный скролл подключен');
+    } else {
+        console.error('❌ Feed не найден');
+    }
+});
+</script>
+
+    
+
 </body>
 </html>
