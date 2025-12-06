@@ -471,6 +471,16 @@ body {
     background: #17212b;
     color: #6ab2f2;
 }
+
+    .product-name {
+    color: #6ab2f2;
+    font-weight: bold;
+}
+
+.product-price {
+    color: #ffd700;
+    font-weight: bold;
+}
     
 
 #currency {
@@ -540,10 +550,10 @@ body {
 
 <!-- SCREEN 2 -->
 <div id="choose" class="screen">
-    <img src="https://github.com/HuntersNetPlus/Collider/blob/main/GH%20LOGO%20WEBP.webp?raw=true" style="width:300px; display:block; margin:0 auto;">
+    <img src="https://github.com/HuntersNetPlus/Collider/blob/main/GH%20LOGO%20WEBP.webp?raw=true" style="width:200px; display:block; margin:0 auto;">
     
     <div style="text-align:center; color:white; font-weight:bold;">
-        Витрина метро <span class="metro-text">—</span> (г.<span class="city-text">—</span>):
+        Витрина метро <span class="metro-text">—</span> (г. <span class="city-text">—</span>):
     </div>
     <div id="card-feed" class="feed">
         
@@ -1022,8 +1032,12 @@ body {
     <b id="pay_title">Выпуск Crypto Bot Карты</b>
     
   <div style="width:69%; border: 1px solid #6ab2f2 ; border-radius: 8px;margin-bottom:5px;">
-    <div style="color:#6ab2f2; width:80%; margin:0 auto; background: #17212b; text-align:center;  margin-top: -10px; z-index: 2;"> Данные заказа <span id="orderNum"></span> <br> <br> Фотографии с места: </div>
-  
+    <div style="color:#6ab2f2; width:80%; margin:0 auto; background: #17212b; text-align:center;  margin-top: -10px; z-index: 2;"> Данные заказа <span id="orderNum"></span> <br> <br> 
+
+  <div><span class="city-text">—</span>, <span class="metro-text">—</span>, <span class="product-name">—</span> </div> <br> Галерея фото:
+
+      </div>
+      
     <div id="blocked-photos-container" style="
     display: flex;
     gap: 5px;
@@ -1137,6 +1151,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Функция обновления текста выбранного товара
+function updateProductTexts() {
+    document.querySelectorAll('.product-name').forEach(el => {
+        el.textContent = selected.name || '—';
+    });
+    
+    document.querySelectorAll('.product-price').forEach(el => {
+        el.textContent = selected.price ? `${selected.price} USDT` : '—';
+    });
+}
+
     
     const screens = {
         welcome: document.getElementById('welcome'),
@@ -1186,26 +1211,30 @@ function openScreen(id) {
         
         // ДОБАВЛЕНА ЭТА СТРОКА ↓
         updateLocationTexts();
+        updateProductTexts(); // ДОБАВЬ ЭТУ СТРОКУ
     }, 900);
 }
 
     function selectOption(name, price) {
-        const discount = price * 0.5;
-        
-        selected = { 
-            name, 
-            price,
-            discount
-        };
-        
-        document.getElementById('pay_title').innerText = name;
-        document.getElementById('price_usdt').innerText = price;
-        openScreen('payment');
-        
-        setTimeout(() => {
-            updateConversion();
-        }, 250);
-    }
+    const discount = price * 0.5;
+    
+    selected = { 
+        name, 
+        price,
+        discount
+    };
+    
+    document.getElementById('pay_title').innerText = name;
+    document.getElementById('price_usdt').innerText = price;
+    openScreen('payment');
+    
+    setTimeout(() => {
+        updateConversion();
+        updateProductTexts(); // ДОБАВЬ ЭТУ СТРОКУ
+    }, 250);
+}
+
+    
 
 async function updateConversion() {
     const cur = document.getElementById("currency").value;
