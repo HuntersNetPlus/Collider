@@ -516,7 +516,7 @@ body {
     <div style="width:100%; text-align:center;">
         <br><br><br>
         <div id="slideshow-container">
-            <img class="slide active" src="https://github.com/HuntersNetPlus/Collider/blob/main/GH%20LOGO%20WEBP.webp?raw=true">
+            <img class="slide active" src="https://github.com/HuntersNetPlus/Collider/blob/main/GHDollar-ezgif.com-video-to-apng-converter.png?raw=true">
             <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Purse.webp?raw=true">
             <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true">
         </div>
@@ -1993,11 +1993,12 @@ function shuffle(array) {
     return array;
 }
 
+// Инициализация feed с перемешанными элементами
 function initFeed() {
     const shuffled = shuffle([...originalOptions]);
     feed.innerHTML = "";
     
-    // Добавляем товары 2 раза (чтобы было ~50 товаров в начале)
+    // Добавляем товары дважды для более плавного скролла
     for (let round = 0; round < 2; round++) {
         shuffled.forEach(opt => {
             const clone = opt.cloneNode(true);
@@ -2005,40 +2006,37 @@ function initFeed() {
             feed.appendChild(clone);
         });
     }
-    
-    console.log('📦 Фид инициализирован:', feed.children.length, 'товаров');
 }
 
 initFeed();
 
-// Бесконечная прокрутка с умным добавлением
+// Постепенное добавление элементов при скролле
+let lastAddTime = 0;
+const ADD_DELAY = 300; // Минимальная задержка между добавлениями (мс)
+
 feed.addEventListener("scroll", () => {
-    const scrollBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight;
-    const optionHeight = 90; // Примерная высота одного товара (padding + content)
-    const remainingItems = Math.floor(scrollBottom / optionHeight);
+    const now = Date.now();
     
-    console.log('Осталось товаров до конца:', remainingItems);
-    
-    // Добавляем только когда осталось меньше 5 товаров
-    if (remainingItems <= 5 && feed.children.length < 100) {
-        console.log('🔄 Добавляем новые товары');
+    // Срабатываем только если почти дошли до низа И прошло достаточно времени
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 100) { // Увеличил с 5 до 100
+        
+        // Проверяем задержку
+        if (now - lastAddTime < ADD_DELAY) return;
+        lastAddTime = now;
         
         const shuffled = shuffle([...originalOptions]);
         
-        // Добавляем сразу 10 товаров
-        for (let i = 0; i < 10 && i < shuffled.length; i++) {
+        // Добавляем сразу 3 элемента за раз (вместо 1)
+        for (let i = 0; i < 3 && i < shuffled.length; i++) {
             const clone = shuffled[i].cloneNode(true);
             attachClickHandler(clone);
             feed.appendChild(clone);
         }
     }
-    
-    // Если товаров слишком много - сбрасываем до 50
-    if (feed.children.length > 100) {
-        console.log('♻️ Перезапуск фида');
-        const currentScroll = feed.scrollTop;
+
+    // Чтобы блок не разрастался бесконечно — перезапускаем, когда > 40 элементов
+    if (feed.children.length > 40) {
         initFeed();
-        feed.scrollTop = currentScroll / 2; // Возвращаем в середину
     }
 });
 
@@ -2321,6 +2319,65 @@ summary.innerText ="Данные заказа: " + selected.name;
 </script>
 
 
+<!-- НОВЫЙ ОТДЕЛЬНЫЙ СКРИПТ -->
+<script>
+window.addEventListener('load', function() {
+    console.log('🟢 Отдельный скрипт запущен');
+    
+    const feed = document.getElementById("card-feed");
+    console.log('Feed элемент:', feed);
+    
+    if (!feed) {
+        console.error('❌ Feed не найден');
+        return;
+    }
+    
+    const SCROLL_SPEED = 0.03; // Регулируй от 0.1 (очень медленно) до 1.0 (обычная скорость)
+    
+    let isTouching = false;
+    let lastTouchY = 0;
+    let lastScrollTop = 0;
+    
+    // ===== ДЛЯ TOUCH (мобильные) =====
+    feed.addEventListener('touchstart', function(e) {
+        isTouching = true;
+        lastTouchY = e.touches[0].clientY;
+        lastScrollTop = feed.scrollTop;
+        console.log('👆 Touch start');
+    }, { passive: true });
+    
+    feed.addEventListener('touchmove', function(e) {
+        if (!isTouching) return;
+        
+        const currentY = e.touches[0].clientY;
+        const deltaY = lastTouchY - currentY;
+        
+        // Применяем замедление
+        feed.scrollTop = lastScrollTop + (deltaY * SCROLL_SPEED);
+        
+        console.log('👆 Touch move, delta:', deltaY);
+    }, { passive: true });
+    
+    feed.addEventListener('touchend', function() {
+        isTouching = false;
+        console.log('👆 Touch end');
+    }, { passive: true });
+    
+    // ===== ДЛЯ МЫШИ/ТАЧПАДА =====
+feed.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    
+    // Плавная анимация вместо резкого скачка
+    const targetScroll = feed.scrollTop + (e.deltaY * SCROLL_SPEED);
+    
+    feed.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth' // ДОБАВЬ плавность
+    });
+    
+    console.log('🖱️ Wheel scroll');
+}, { passive: false });
+</script>
 
     
 
