@@ -1993,61 +1993,71 @@ function shuffle(array) {
     return array;
 }
 
-// Инициализация feed с перемешанными элементами
 function initFeed() {
     const shuffled = shuffle([...originalOptions]);
     feed.innerHTML = "";
     
-    // Добавляем товары дважды для более плавного скролла
-    for (let round = 0; round < 2; round++) {
+    // Добавляем товары 3 раза (было 2)
+    for (let round = 0; round < 3; round++) {
         shuffled.forEach(opt => {
             const clone = opt.cloneNode(true);
             attachClickHandler(clone);
             feed.appendChild(clone);
         });
     }
+    
+    console.log('🎬 Фид инициализирован:', feed.children.length, 'товаров');
 }
 
 initFeed();
 
-// Умное добавление элементов
+// Умное добавление элементов с throttle
 let isAdding = false;
+let lastScrollCheck = 0;
+const SCROLL_CHECK_DELAY = 200; // Проверяем скролл не чаще чем раз в 200мс
 
 feed.addEventListener("scroll", () => {
+    const now = Date.now();
+    
+    // Ограничиваем частоту проверок
+    if (now - lastScrollCheck < SCROLL_CHECK_DELAY) return;
+    lastScrollCheck = now;
+    
     // Считаем сколько осталось до конца
     const scrollBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight;
-    const remainingItems = Math.floor(scrollBottom / 100); // ~100px на элемент
+    const remainingItems = Math.floor(scrollBottom / 100);
     
-    // Добавляем только когда осталось меньше 8 элементов
-    if (remainingItems <= 8 && !isAdding && feed.children.length < 100) {
+    console.log('🔍 Осталось товаров:', remainingItems, 'Всего:', feed.children.length);
+    
+    // Добавляем только когда осталось меньше 5 элементов
+    if (remainingItems <= 5 && !isAdding && feed.children.length < 150) {
         isAdding = true;
+        console.log('➕ Начинаем добавление...');
         
-        // Добавляем с небольшой задержкой для плавности
         setTimeout(() => {
             const shuffled = shuffle([...originalOptions]);
             
-            // Добавляем сразу 15 элементов (целый "блок")
-            for (let i = 0; i < 15 && i < shuffled.length; i++) {
+            // Добавляем 20 элементов
+            for (let i = 0; i < 20 && i < shuffled.length; i++) {
                 const clone = shuffled[i].cloneNode(true);
                 attachClickHandler(clone);
                 feed.appendChild(clone);
             }
             
             isAdding = false;
-            console.log('📦 Добавлено 15 товаров. Всего:', feed.children.length);
-        }, 100);
+            console.log('✅ Добавлено 20 товаров. Всего:', feed.children.length);
+        }, 150);
     }
     
-    // Сброс при переполнении
-    if (feed.children.length > 100) {
-        const currentScroll = feed.scrollTop;
+    // Сброс только когда РЕАЛЬНО много элементов
+    if (feed.children.length > 150) {
+        console.log('⚠️ Слишком много элементов, перезапуск...');
+        const scrollPercent = feed.scrollTop / feed.scrollHeight;
         initFeed();
-        feed.scrollTop = currentScroll / 2;
+        feed.scrollTop = feed.scrollHeight * Math.min(scrollPercent, 0.5);
         console.log('♻️ Фид перезапущен');
     }
 });
-
-
 
 
 
