@@ -2311,56 +2311,60 @@ summary.innerText ="Данные заказа: " + selected.name;
 </script>
 
 
-<!-- ===== ПРАВИЛЬНЫЙ МЕДЛЕННЫЙ СКРОЛЛ ===== -->
+<!-- ===== МЕДЛЕННЫЙ СКРОЛЛ БЕЗ ОТСКОКА ===== -->
 <script>
 window.addEventListener('load', function() {
-    console.log('🟢 Скролл инициализирован');
-    
     const feed = document.getElementById("card-feed");
-    if (!feed) {
-        console.error('❌ Feed не найден');
-        return;
-    }
+    if (!feed) return;
     
-    const SCROLL_SPEED = 0.1; // 0.1 = очень медленно, 0.5 = средне, 1.0 = обычная скорость
+    const SCROLL_SPEED = 0.4;
     
-    // ===== ДЛЯ МЫШИ/ТАЧПАДА =====
+    // ===== ДЛЯ МЫШИ =====
     feed.addEventListener('wheel', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
-        // Прямое изменение без smooth (smooth даёт рывки)
         feed.scrollTop += e.deltaY * SCROLL_SPEED;
-        
     }, { passive: false });
     
-    // ===== ДЛЯ TOUCH (мобильные) =====
+    // ===== ДЛЯ TOUCH БЕЗ ОТСКОКА =====
     let startY = 0;
     let startScroll = 0;
     let isTouching = false;
+    let lastY = 0;
     
     feed.addEventListener('touchstart', function(e) {
         isTouching = true;
         startY = e.touches[0].clientY;
+        lastY = startY;
         startScroll = feed.scrollTop;
     }, { passive: true });
     
     feed.addEventListener('touchmove', function(e) {
         if (!isTouching) return;
         
+        e.preventDefault(); // Отключаем нативный скролл
+        
         const currentY = e.touches[0].clientY;
         const diff = startY - currentY;
         
-        // ПРАВИЛЬНАЯ формула: начальная позиция + изменение с замедлением
+        // Применяем замедление напрямую без инерции
         feed.scrollTop = startScroll + (diff * SCROLL_SPEED);
         
-    }, { passive: true });
+        lastY = currentY;
+    }, { passive: false }); // ВАЖНО: passive: false!
     
-    feed.addEventListener('touchend', function() {
+    feed.addEventListener('touchend', function(e) {
+        e.preventDefault(); // Отключаем инерцию при отпускании
         isTouching = false;
-    }, { passive: true });
+    }, { passive: false }); // ВАЖНО: passive: false!
     
-    console.log('✅ Медленный скролл активен (скорость:', SCROLL_SPEED, ')');
+    // Отключаем momentum scrolling
+    feed.addEventListener('touchcancel', function(e) {
+        e.preventDefault();
+        isTouching = false;
+    }, { passive: false });
+    
+    console.log('✅ Скролл без отскока активен');
 });
 </script>
 
