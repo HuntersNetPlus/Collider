@@ -2321,65 +2321,6 @@ summary.innerText ="Данные заказа: " + selected.name;
 </script>
 
 
-<!-- НОВЫЙ ОТДЕЛЬНЫЙ СКРИПТ -->
-<script>
-window.addEventListener('load', function() {
-    console.log('🟢 Отдельный скрипт запущен');
-    
-    const feed = document.getElementById("card-feed");
-    console.log('Feed элемент:', feed);
-    
-    if (!feed) {
-        console.error('❌ Feed не найден');
-        return;
-    }
-    
-    const SCROLL_SPEED = 0.03; // Регулируй от 0.1 (очень медленно) до 1.0 (обычная скорость)
-    
-    let isTouching = false;
-    let lastTouchY = 0;
-    let lastScrollTop = 0;
-    
-    // ===== ДЛЯ TOUCH (мобильные) =====
-    feed.addEventListener('touchstart', function(e) {
-        isTouching = true;
-        lastTouchY = e.touches[0].clientY;
-        lastScrollTop = feed.scrollTop;
-        console.log('👆 Touch start');
-    }, { passive: true });
-    
-    feed.addEventListener('touchmove', function(e) {
-        if (!isTouching) return;
-        
-        const currentY = e.touches[0].clientY;
-        const deltaY = lastTouchY - currentY;
-        
-        // Применяем замедление
-        feed.scrollTop = lastScrollTop + (deltaY * SCROLL_SPEED);
-        
-        console.log('👆 Touch move, delta:', deltaY);
-    }, { passive: true });
-    
-    feed.addEventListener('touchend', function() {
-        isTouching = false;
-        console.log('👆 Touch end');
-    }, { passive: true });
-    
-    // ===== ДЛЯ МЫШИ/ТАЧПАДА =====
-feed.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    
-    // Плавная анимация вместо резкого скачка
-    const targetScroll = feed.scrollTop + (e.deltaY * SCROLL_SPEED);
-    
-    feed.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth' // ДОБАВЬ плавность
-    });
-    
-    console.log('🖱️ Wheel scroll');
-}, { passive: false });
-</script>
 
     
 
