@@ -28,8 +28,10 @@ body {
 
 #card-feed {
     overflow-y: scroll;
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
+    touch-action: none; /* ВАЖНО! */
+    -webkit-overflow-scrolling: auto; /* НЕ touch! */
+    overscroll-behavior: none;
+    overflow: hidden; /* ДОБАВЬ ЭТО */
 }
 
 
@@ -2310,61 +2312,62 @@ summary.innerText ="Данные заказа: " + selected.name;
 
 </script>
 
-
-<!-- ===== МЕДЛЕННЫЙ СКРОЛЛ БЕЗ ОТСКОКА ===== -->
+    <!-- ===== РАБОЧИЙ МОБИЛЬНЫЙ СКРОЛЛ ===== -->
 <script>
 window.addEventListener('load', function() {
     const feed = document.getElementById("card-feed");
-    if (!feed) return;
+    if (!feed) {
+        console.error('Feed не найден!');
+        return;
+    }
     
-    const SCROLL_SPEED = 0.4;
+    const SCROLL_SPEED = 0.6; // Регулируй от 0.3 до 1.0
+    
+    console.log('🎯 Инициализация скролла...');
     
     // ===== ДЛЯ МЫШИ =====
     feed.addEventListener('wheel', function(e) {
         e.preventDefault();
-        e.stopPropagation();
         feed.scrollTop += e.deltaY * SCROLL_SPEED;
+        console.log('🖱️ Wheel:', e.deltaY);
     }, { passive: false });
     
-    // ===== ДЛЯ TOUCH БЕЗ ОТСКОКА =====
-    let startY = 0;
-    let startScroll = 0;
-    let isTouching = false;
-    let lastY = 0;
+    // ===== ДЛЯ TOUCH =====
+    let touchStartY = 0;
+    let touchLastY = 0;
+    let scrollStart = 0;
+    let isTouch = false;
     
     feed.addEventListener('touchstart', function(e) {
-        isTouching = true;
-        startY = e.touches[0].clientY;
-        lastY = startY;
-        startScroll = feed.scrollTop;
-    }, { passive: true });
+        isTouch = true;
+        touchStartY = e.touches[0].clientY;
+        touchLastY = touchStartY;
+        scrollStart = feed.scrollTop;
+        console.log('👆 Touch START:', touchStartY);
+    }, { passive: false });
     
     feed.addEventListener('touchmove', function(e) {
-        if (!isTouching) return;
+        if (!isTouch) return;
         
-        e.preventDefault(); // Отключаем нативный скролл
+        e.preventDefault(); // Блокируем нативный скролл
         
-        const currentY = e.touches[0].clientY;
-        const diff = startY - currentY;
+        const touchY = e.touches[0].clientY;
+        const delta = touchLastY - touchY;
         
-        // Применяем замедление напрямую без инерции
-        feed.scrollTop = startScroll + (diff * SCROLL_SPEED);
+        // Скроллим СРАЗУ
+        feed.scrollTop += delta * SCROLL_SPEED;
         
-        lastY = currentY;
+        touchLastY = touchY;
+        
+        console.log('👆 Touch MOVE:', delta, 'ScrollTop:', feed.scrollTop);
     }, { passive: false }); // ВАЖНО: passive: false!
     
     feed.addEventListener('touchend', function(e) {
-        e.preventDefault(); // Отключаем инерцию при отпускании
-        isTouching = false;
-    }, { passive: false }); // ВАЖНО: passive: false!
-    
-    // Отключаем momentum scrolling
-    feed.addEventListener('touchcancel', function(e) {
-        e.preventDefault();
-        isTouching = false;
+        console.log('👆 Touch END');
+        isTouch = false;
     }, { passive: false });
     
-    console.log('✅ Скролл без отскока активен');
+    console.log('✅ Скролл подключён! Скорость:', SCROLL_SPEED);
 });
 </script>
     
