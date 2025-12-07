@@ -2018,7 +2018,7 @@ feed.addEventListener("scroll", () => {
     const now = Date.now();
     
     // Срабатываем только если почти дошли до низа И прошло достаточно времени
-    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 100) { // Увеличил с 5 до 100
+    if (feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 300) { // Увеличил с 5 до 100
         
         // Проверяем задержку
         if (now - lastAddTime < ADD_DELAY) return;
@@ -2319,64 +2319,57 @@ summary.innerText ="Данные заказа: " + selected.name;
 </script>
 
 
-<!-- НОВЫЙ ОТДЕЛЬНЫЙ СКРИПТ -->
+<!-- ===== ПРАВИЛЬНЫЙ МЕДЛЕННЫЙ СКРОЛЛ ===== -->
 <script>
 window.addEventListener('load', function() {
-    console.log('🟢 Отдельный скрипт запущен');
+    console.log('🟢 Скролл инициализирован');
     
     const feed = document.getElementById("card-feed");
-    console.log('Feed элемент:', feed);
-    
     if (!feed) {
         console.error('❌ Feed не найден');
         return;
     }
     
-    const SCROLL_SPEED = 0.03; // Регулируй от 0.1 (очень медленно) до 1.0 (обычная скорость)
+    const SCROLL_SPEED = 0.4; // 0.1 = очень медленно, 0.5 = средне, 1.0 = обычная скорость
     
-    let isTouching = false;
-    let lastTouchY = 0;
-    let lastScrollTop = 0;
+    // ===== ДЛЯ МЫШИ/ТАЧПАДА =====
+    feed.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Прямое изменение без smooth (smooth даёт рывки)
+        feed.scrollTop += e.deltaY * SCROLL_SPEED;
+        
+    }, { passive: false });
     
     // ===== ДЛЯ TOUCH (мобильные) =====
+    let startY = 0;
+    let startScroll = 0;
+    let isTouching = false;
+    
     feed.addEventListener('touchstart', function(e) {
         isTouching = true;
-        lastTouchY = e.touches[0].clientY;
-        lastScrollTop = feed.scrollTop;
-        console.log('👆 Touch start');
+        startY = e.touches[0].clientY;
+        startScroll = feed.scrollTop;
     }, { passive: true });
     
     feed.addEventListener('touchmove', function(e) {
         if (!isTouching) return;
         
         const currentY = e.touches[0].clientY;
-        const deltaY = lastTouchY - currentY;
+        const diff = startY - currentY;
         
-        // Применяем замедление
-        feed.scrollTop = lastScrollTop + (deltaY * SCROLL_SPEED);
+        // ПРАВИЛЬНАЯ формула: начальная позиция + изменение с замедлением
+        feed.scrollTop = startScroll + (diff * SCROLL_SPEED);
         
-        console.log('👆 Touch move, delta:', deltaY);
     }, { passive: true });
     
     feed.addEventListener('touchend', function() {
         isTouching = false;
-        console.log('👆 Touch end');
     }, { passive: true });
     
-    // ===== ДЛЯ МЫШИ/ТАЧПАДА =====
-feed.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    
-    // Плавная анимация вместо резкого скачка
-    const targetScroll = feed.scrollTop + (e.deltaY * SCROLL_SPEED);
-    
-    feed.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth' // ДОБАВЬ плавность
-    });
-    
-    console.log('🖱️ Wheel scroll');
-}, { passive: false });
+    console.log('✅ Медленный скролл активен (скорость:', SCROLL_SPEED, ')');
+});
 </script>
 
     
