@@ -27,11 +27,10 @@ body {
 
 
 #card-feed {
-    overflow-y: scroll;
-    touch-action: none; /* ВАЖНО! */
-    -webkit-overflow-scrolling: auto; /* НЕ touch! */
+    overflow-y: hidden; /* ВАЖНО: hidden, не scroll! */
+    touch-action: none;
+    -webkit-overflow-scrolling: auto;
     overscroll-behavior: none;
-    overflow: hidden; /* ДОБАВЬ ЭТО */
 }
 
 
