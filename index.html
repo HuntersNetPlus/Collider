@@ -27,10 +27,11 @@ body {
 
 
 #card-feed {
-    overflow-y: hidden; /* ВАЖНО: hidden, не scroll! */
-    touch-action: none;
-    -webkit-overflow-scrolling: auto;
+    overflow-y: scroll;
+    touch-action: none; /* ВАЖНО! */
+    -webkit-overflow-scrolling: auto; /* НЕ touch! */
     overscroll-behavior: none;
+    overflow: hidden; /* ДОБАВЬ ЭТО */
 }
 
 
@@ -517,7 +518,7 @@ body {
     <div style="width:100%; text-align:center;">
         <br><br><br>
         <div id="slideshow-container">
-            <img class="slide active" src="https://github.com/HuntersNetPlus/Collider/blob/main/Gold2-ezgif.com-optipng.png?raw=true">
+         <img class="slide active" src="https://github.com/HuntersNetPlus/Collider/blob/main/Gold2-ezgif.com-optipng.png?raw=true">
             <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Purse.webp?raw=true">
             <img class="slide" src="https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/blob/main/Objects/Shopping%20Cart.webp?raw=true">
         </div>
@@ -2311,73 +2312,62 @@ summary.innerText ="Данные заказа: " + selected.name;
 
 </script>
 
-<!-- ===== POINTER EVENTS СКРОЛЛ ===== -->
+    <!-- ===== РАБОЧИЙ МОБИЛЬНЫЙ СКРОЛЛ ===== -->
 <script>
 window.addEventListener('load', function() {
     const feed = document.getElementById("card-feed");
     if (!feed) {
-        console.error('❌ Feed не найден!');
+        console.error('Feed не найден!');
         return;
     }
     
-    const SCROLL_SPEED = 0.6;
+    const SCROLL_SPEED = 65; // Регулируй от 0.3 до 1.0
     
-    console.log('🔥 Начинаем инициализацию...');
+    console.log('🎯 Инициализация скролла...');
     
     // ===== ДЛЯ МЫШИ =====
     feed.addEventListener('wheel', function(e) {
         e.preventDefault();
         feed.scrollTop += e.deltaY * SCROLL_SPEED;
+        console.log('🖱️ Wheel:', e.deltaY);
     }, { passive: false });
     
-    // ===== POINTER EVENTS (работает и на мобильных и на ПК) =====
-    let isPointerDown = false;
-    let lastPointerY = 0;
-    let pointerId = null;
+    // ===== ДЛЯ TOUCH =====
+    let touchStartY = 0;
+    let touchLastY = 0;
+    let scrollStart = 0;
+    let isTouch = false;
     
-    feed.addEventListener('pointerdown', function(e) {
-        isPointerDown = true;
-        pointerId = e.pointerId;
-        lastPointerY = e.clientY;
-        
-        // Захватываем pointer
-        feed.setPointerCapture(e.pointerId);
-        
-        console.log('✋ Pointer DOWN:', e.clientY, 'Type:', e.pointerType);
-    });
+    feed.addEventListener('touchstart', function(e) {
+        isTouch = true;
+        touchStartY = e.touches[0].clientY;
+        touchLastY = touchStartY;
+        scrollStart = feed.scrollTop;
+        console.log('👆 Touch START:', touchStartY);
+    }, { passive: false });
     
-    feed.addEventListener('pointermove', function(e) {
-        if (!isPointerDown || e.pointerId !== pointerId) return;
+    feed.addEventListener('touchmove', function(e) {
+        if (!isTouch) return;
         
-        const currentY = e.clientY;
-        const delta = lastPointerY - currentY;
+        e.preventDefault(); // Блокируем нативный скролл
         
-        // Скроллим СРАЗУ ВО ВРЕМЯ движения
+        const touchY = e.touches[0].clientY;
+        const delta = touchLastY - touchY;
+        
+        // Скроллим СРАЗУ
         feed.scrollTop += delta * SCROLL_SPEED;
         
-        lastPointerY = currentY;
+        touchLastY = touchY;
         
-        console.log('✋ Pointer MOVE delta:', delta, 'scrollTop:', feed.scrollTop);
-    });
+        console.log('👆 Touch MOVE:', delta, 'ScrollTop:', feed.scrollTop);
+    }, { passive: false }); // ВАЖНО: passive: false!
     
-    feed.addEventListener('pointerup', function(e) {
-        if (e.pointerId !== pointerId) return;
-        
-        isPointerDown = false;
-        
-        // Освобождаем pointer
-        feed.releasePointerCapture(e.pointerId);
-        
-        console.log('✋ Pointer UP');
-    });
+    feed.addEventListener('touchend', function(e) {
+        console.log('👆 Touch END');
+        isTouch = false;
+    }, { passive: false });
     
-    feed.addEventListener('pointercancel', function(e) {
-        if (e.pointerId !== pointerId) return;
-        isPointerDown = false;
-        console.log('✋ Pointer CANCEL');
-    });
-    
-    console.log('✅ Pointer скролл активен! Скорость:', SCROLL_SPEED);
+    console.log('✅ Скролл подключён! Скорость:', SCROLL_SPEED);
 });
 </script>
     
