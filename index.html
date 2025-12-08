@@ -2312,62 +2312,73 @@ summary.innerText ="Данные заказа: " + selected.name;
 
 </script>
 
-    <!-- ===== РАБОЧИЙ МОБИЛЬНЫЙ СКРОЛЛ ===== -->
+<!-- ===== POINTER EVENTS СКРОЛЛ ===== -->
 <script>
 window.addEventListener('load', function() {
     const feed = document.getElementById("card-feed");
     if (!feed) {
-        console.error('Feed не найден!');
+        console.error('❌ Feed не найден!');
         return;
     }
     
-    const SCROLL_SPEED = 65; // Регулируй от 0.3 до 1.0
+    const SCROLL_SPEED = 0.6;
     
-    console.log('🎯 Инициализация скролла...');
+    console.log('🔥 Начинаем инициализацию...');
     
     // ===== ДЛЯ МЫШИ =====
     feed.addEventListener('wheel', function(e) {
         e.preventDefault();
         feed.scrollTop += e.deltaY * SCROLL_SPEED;
-        console.log('🖱️ Wheel:', e.deltaY);
     }, { passive: false });
     
-    // ===== ДЛЯ TOUCH =====
-    let touchStartY = 0;
-    let touchLastY = 0;
-    let scrollStart = 0;
-    let isTouch = false;
+    // ===== POINTER EVENTS (работает и на мобильных и на ПК) =====
+    let isPointerDown = false;
+    let lastPointerY = 0;
+    let pointerId = null;
     
-    feed.addEventListener('touchstart', function(e) {
-        isTouch = true;
-        touchStartY = e.touches[0].clientY;
-        touchLastY = touchStartY;
-        scrollStart = feed.scrollTop;
-        console.log('👆 Touch START:', touchStartY);
-    }, { passive: false });
+    feed.addEventListener('pointerdown', function(e) {
+        isPointerDown = true;
+        pointerId = e.pointerId;
+        lastPointerY = e.clientY;
+        
+        // Захватываем pointer
+        feed.setPointerCapture(e.pointerId);
+        
+        console.log('✋ Pointer DOWN:', e.clientY, 'Type:', e.pointerType);
+    });
     
-    feed.addEventListener('touchmove', function(e) {
-        if (!isTouch) return;
+    feed.addEventListener('pointermove', function(e) {
+        if (!isPointerDown || e.pointerId !== pointerId) return;
         
-        e.preventDefault(); // Блокируем нативный скролл
+        const currentY = e.clientY;
+        const delta = lastPointerY - currentY;
         
-        const touchY = e.touches[0].clientY;
-        const delta = touchLastY - touchY;
-        
-        // Скроллим СРАЗУ
+        // Скроллим СРАЗУ ВО ВРЕМЯ движения
         feed.scrollTop += delta * SCROLL_SPEED;
         
-        touchLastY = touchY;
+        lastPointerY = currentY;
         
-        console.log('👆 Touch MOVE:', delta, 'ScrollTop:', feed.scrollTop);
-    }, { passive: false }); // ВАЖНО: passive: false!
+        console.log('✋ Pointer MOVE delta:', delta, 'scrollTop:', feed.scrollTop);
+    });
     
-    feed.addEventListener('touchend', function(e) {
-        console.log('👆 Touch END');
-        isTouch = false;
-    }, { passive: false });
+    feed.addEventListener('pointerup', function(e) {
+        if (e.pointerId !== pointerId) return;
+        
+        isPointerDown = false;
+        
+        // Освобождаем pointer
+        feed.releasePointerCapture(e.pointerId);
+        
+        console.log('✋ Pointer UP');
+    });
     
-    console.log('✅ Скролл подключён! Скорость:', SCROLL_SPEED);
+    feed.addEventListener('pointercancel', function(e) {
+        if (e.pointerId !== pointerId) return;
+        isPointerDown = false;
+        console.log('✋ Pointer CANCEL');
+    });
+    
+    console.log('✅ Pointer скролл активен! Скорость:', SCROLL_SPEED);
 });
 </script>
     
